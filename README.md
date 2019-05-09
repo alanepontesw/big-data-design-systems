@@ -54,6 +54,7 @@ Index Topics
         * By default users can't access anything in your account then you will to create policies to the users. 
         ![Users](./images/users.png)
         * New users are assigned **Access Key ID** and **Secret Access Key** when first created.
+          * **Access Key ID** and **Secret Access Key** you get to view these just once time. If you lose them, you have to regenerate them. So, save them in a secure location.
         * These are not the same as a password, you cannot use **Access Key ID** and **Secret Access Key** to login into the console, you just can use theses to access API's and Command Line.
       * Policies
         * Polices as essentially documents theses documents are in a format called JSON and they give permissions as to what a User, Group or Role is able to do.  
@@ -222,13 +223,11 @@ Index Topics
       ![S3 Pattern3](./images/s3_pattern3.png)
       * Unknown Access Patterns
       ![S3 Pattern4](./images/s3_pattern4.png)
-    * Utils Links
-      * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
   * Cloud Front 
     * A content delivery network (CDN) is a system of distributed systems servers (networks) that delivery webpages and other web content to a user based on the geographic locations of the user, the origin of the webpage,and a content delivery server.
     * Key terminologies:
       * Edge Location: 
-        * This is the location where the content will be cached.     
+        * This is the location where the content will be cached. This is separate to an AWS Region/AZ  
       * Origin:
           * This is the origin of all files that the CDN will distribute. This can be an S3 Bucket, an EC2 Instance, an Elastic Load Balancer, or Route53
       * Distribuition 
@@ -240,7 +239,73 @@ Index Topics
         * Used for media streaming
       * Web Distribuition:
         * Typically used for Websites
-    ![Cloud Front](./images/cloud_front.png)
+    * Tips
+      * Edge Location are not just READ ONLY - you can write to them.
+      * Objects are cached for the Time To Live (TTL)
+      * You can cached objects, but you will be charged.
+    ![Cloud Front](./images/cloud_front.png) 
+  * Snowball
+    * is a petabyte-scale data transport solution that uses secure appliances to transfer large amounts of data into and out of Amazon. Using Snowball addresses common challenges with large-scale data transfer including high networks costs, long transfer times, and security concerns. Tranfering data with Snowball is simple, fast, secure, and can be as little as one-fifth the cost of high speed internet.
+    ![Cloud Front](./images/snowball_image.png) 
+    * Comes in either a 50TB or 80TB
+    * Uses a multiple layers of security designed to protect your data including tamper-resistant enclusures.
+    * import and export to s3.
+    * 256-bit encryption.
+    * and a industry-standard Trusted Platform Module (TPM) to ensure both security anf full chain of custody of your data. 
+    * AWS Snowball Edge is a 100TM data transfer device with on-board storage and compute capabilities. You can use Snowball Edge to move large amounts of data into and out AWS, as a temporary storage tier for large local datasets or support local workloads in remoto or offline locations.
+    * Snowmobile
+      ![Snowmobile](./images/snowmobile.png)
+      * Exabyte-scale data transfer used to move extremely large amounts of data to AWS.
+      * up to 100PB by snowmobile.
+      * Makes easy to move massive volumes of data to the cloud (videos, libraries, images, or even a complete datacerter migration)
+      * secure, fast and cost effective
+    * When should I consider using Snowball instead of the Internet?
+    ![SnowmobilevsInterned](./images/when_use_snowball.png)
+  
+  * Storage Gateway
+    * Essentialy a manner of replication your local data to AWS.
+    * Is a service that connects an on-promises softwares to provide seamless and secure integration between an organization's on promises IT enviroment and AWS's Storage Infrastructure. 
+    * This will replicate your data to AWS.
+    * It's available for download as a Virtual Machine (VM) image then you can install on a host in your data center.
+    * It's support either ESXi or Microsoft Hyper-V.
+    * There are three differentes types of SG:
+      * File Gateway (NFS)
+        * for flat files, stored directly on S3 
+      * Volume Gateway (iSCI)
+        * Store Volumes
+          * Entire Dataset is stored on site and is assynchronously backed up to S3.
+          * Entire Dataset is stored on S3 and the most frequently accessed data is cached on site.
+        * Cached Volumes
+      * Tape Gateway (VTL - Virtual Tape Library)
+    * File Gateway (NFS)
+      * Files are storage in your S3 Buckets, accessed through a Network File System (NFS) mount point. Ownership, permissions, and timestamps are durably stored in S3 in the user-metadata of the object associated with the file. 
+      * Once objects are transferred to S3 they can managed as native S3 objects.
+      ![NFS](./images/file_gateway_nfs.png)
+    * Volume Gateway (Small Computer System Interface (iSCSI) )
+      * The volume interface presents you application with disks volumes using the iSCI block protocol
+      * Data written to these volumes can be assynchronously backed up as point-in-time snapshots of your volumes, and stored in the cloud as Amazon EBS snapshots.
+      * Snapshots are incremental backups that capture only changed blocks. All snapshots storage is all compressed to minimize your storage charges. 
+      * Stored Volumes:
+        * > If you need low-latency access to your entire dataset, first configure your on-premises gateway to store all your data locally. Then asynchronously back up point-in-time snapshots of this data to Amazon S3. This configuration provides durable and inexpensive offsite backups that you can recover to your local data center or Amazon EC2. For example, if you need replacement capacity for disaster recovery, you can recover the backups to Amazon EC2. [*](https://docs.aws.amazon.com/storagegateway/latest/userguide/WhatIsStorageGateway.html)
+        * 1GB - 16TB in size for Stored Volumes.
+      * Cached volumes: 
+        * > You store your data in Amazon Simple Storage Service (Amazon S3) and retain a copy of frequently accessed data subsets locally. Cached volumes offer a substantial cost savings on primary storage and minimize the need to scale your storage on-premises. You also retain low-latency access to your frequently accessed data.
+        * 1GB - 32TB in size for Cached Volumes.
+        * ![VOLUMES](./images/stored_volume.png)
+    * Tape Gateway 
+        * > With a tape gateway, you can cost-effectively and durably archive backup data in Amazon S3 Glacier or S3 Glacier Deep Archive. A tape gateway provides a virtual tape infrastructure that scales seamlessly with your business needs and eliminates the operational burden of provisioning, scaling, and maintaining a physical tape infrastructure.
+        ![Tape Gateway](./images/tape_gateway.png)
+
+      
+
+
+
+
+  * Utils Links
+      * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
+      * S3 Faqs[*](https://www.amazonaws.cn/en/s3/faqs/)
+      * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
+
 
 
 
