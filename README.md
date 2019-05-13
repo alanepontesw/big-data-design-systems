@@ -90,10 +90,10 @@ Index Topics
         * A role does not have any credentials (password or access keys) associated with it
         * You need to associate policies for your roles.
         * Roles can be applied for Users.
-        * > You can also have **a role tied to the ARN of a user from a different organization**. This allows the external user to assume that role as a part of your organization. **This is typically used when you have a third party service that is acting on your AWS Organization**. You’ll be asked to create a Cross-Account IAM Role and **add the external user as a Trust Relationship**.** The Trust Relationship is telling AWS that the specified external user can assume this role**.
+        * > You can also have **a role tied to the ARN of a user from a different organization**. This allows the external user to assume that role as a part of your organization. **This is typically used when you have a third party service that is acting on your AWS Organization**. You’ll be asked to create a Cross-Account IAM Role and **add the external user as a Trust Relationship**. **The Trust Relationship is telling AWS that the specified external user can assume this role**.
         ![RolesUserExternal](./images/roles_as_user_and_external_user.png)
       * Groups
-        * A bunch of users then each user in the group automatically has the permissions that are assigned to the group 
+        * A bunch of users. Each user in the group automatically has the permissions that are assigned to the group 
         * >  **If a new user joins your organization** and should have administrator privileges, you can assign the appropriate permissions by adding the user to that group. Similarly, if a person changes jobs in your organization, instead of editing that user’s permissions, you can remove him or her from the old groups and add him or her to the appropriate new groups.
         ![Group](./images/group.png)
       * MFA
@@ -134,11 +134,11 @@ Index Topics
      *  Files are storage in buckets (it means, folders are you put your files)
         *  S3 use a global namespace so bucket must be uniques.
     * Monitor, analyze and optimize
-    
+    ![Monitoring](./images/s3_monitor_analyze_optimize.png)    
     * S3 has:
       * objects or files 
         * has tags and prefix
-        ![Tags and Prefix](./images/s3_monitor_analyze_optimize.png)
+        ![Tags and Prefix](./images/tags_and_prefixes.png)  
 
       * keys(are objects names)
       * values, it means, a simple sequence of bytes.
@@ -149,7 +149,7 @@ Index Topics
         *  Torrent
     * Data consistency in s3:
       * Read after write consistency for PUTS of new objects. (if you write the file and read it immediately afterwards you will be able to view the data)
-      * Eventual Consistency for overwrites PUTS and Deletes (if you update an existing file or delete a file and read it immediately, you may get the older version, or yoy may not. It means, can take some time to propagate)
+      * Eventual Consistency for overwrites PUTS and Deletes (if you update an existing file or delete a file and read it immediately, you may get the older version, or you may not. It means, can take some time to propagate)
     * S3 Storage Class:
       * It's import choice the right storage class
       ![S3 Storage Class](./images/the_right_storage_class.png)
@@ -210,6 +210,7 @@ Index Topics
       * Delete markers are not replicated.
       * Delete individual versions or delete markers will not be replicated.
     * S3 Transfer Acceleration 
+      * HIPAA compliant
       * utilises the CLoud Front Edge Network to accelerate your uploads to S3. Instead of uploading directly to your bucket S3, you can use a distinct URL to upload directly to an edge location which will then transfer that file to S3.  
       ![TRANSFER ACCELERATION](./images/transfer_acceleration.png)
       * Trasfer Acceleration Tool[*](https://aws.amazon.com/premiumsupport/knowledge-center/upload-speed-s3-transfer-acceleration/)
@@ -242,7 +243,7 @@ Index Topics
     * Tips
       * Edge Location are not just READ ONLY - you can write to them.
       * Objects are cached for the Time To Live (TTL)
-      * You can cached objects, but you will be charged.
+      * You can invalidate cached objects, but you will be charged.
     ![Cloud Front](./images/cloud_front.png) 
   * Snowball
     * is a petabyte-scale data transport solution that uses secure appliances to transfer large amounts of data into and out of Amazon. Using Snowball addresses common challenges with large-scale data transfer including high networks costs, long transfer times, and security concerns. Tranfering data with Snowball is simple, fast, secure, and can be as little as one-fifth the cost of high speed internet.
@@ -277,7 +278,7 @@ Index Topics
           * Entire Dataset is stored on S3 and the most frequently accessed data is cached on site.
         * Cached Volumes
       * Tape Gateway (VTL - Virtual Tape Library)
-    * File Gateway (NFS)
+    * File Gateway (NFS - Network File System)
       * Files are storage in your S3 Buckets, accessed through a Network File System (NFS) mount point. Ownership, permissions, and timestamps are durably stored in S3 in the user-metadata of the object associated with the file. 
       * Once objects are transferred to S3 they can managed as native S3 objects.
       ![NFS](./images/file_gateway_nfs.png)
@@ -295,6 +296,53 @@ Index Topics
     * Tape Gateway 
         * > With a tape gateway, you can cost-effectively and durably archive backup data in Amazon S3 Glacier or S3 Glacier Deep Archive. A tape gateway provides a virtual tape infrastructure that scales seamlessly with your business needs and eliminates the operational burden of provisioning, scaling, and maintaining a physical tape infrastructure.
         ![Tape Gateway](./images/tape_gateway.png)
+  * EC2 (Elastic Compute Cloud)
+    * It's a Virtual Machine (VM) in the cloud.
+    * Is a web service that provides resizable compute capacity in the cloud. 
+    * Reduce the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change. 
+    * The AWS Pricing 
+    ![Pricing Principles](./images/pricing_principles.png)
+    * EC2 Pricing Models 
+      * On demand
+        * Allows you to pay a fixed rate by the hour (or by the second) with no commitment
+      * Reserved
+        * Provides you with a capacity reservation, and offer a significant discount on the hourly charge for an instance. Contract Terms are 1 Year or 3 Year Terms  
+      * Spot
+        * Enables you to bid whatever price you want for instance capacity, providing for even greater savings if your applications have flexible start and end times.
+      * Dedicated Hosts
+        * Physical EC2 server dedicated for your use. Dedicated Hosts can help you reduce costs by allowing you to use your existing server-bound software licenses.
+    * When to use one or other?
+      * On demand
+        * Users that want the low cost and flexibily of Amazon EC2 without any up front payment or long-term commitment.
+        * Applications with short term, spike, or unpredictable workloads that cannot be interrupted. 
+        * Applications being developed or tested on Amazon EC2 for the first time.
+      * Reserved 
+        * Applications with steady state or predictable usage.
+        * Applications that require reserved capacity.
+        * Users able to make upfront payments to reduce their total computing costs even futher.
+        * Types:
+          * Standard Reserved Instances
+            * These offer up to 75% off on demand instances. The more you pay up front and the longer the contracts, the greater the discount. 
+          * Convertible Reserved Instances
+            * These offer up to 54% off on demand capability to change the attributes of the RI as long as the exchange results in the creation of RI of equal or greater value.
+          * Scheduled Reserved Instances
+            * These are available to launch within the time windows you reserve. This option allows you to match your capacity reservation to a predictable recurring schedule that only requires a fraction of a day, a week, o a month.
+      * Spot
+        * Applications that have flexible start and end times.
+        * Applications that are only feasible at very low compute prices.
+        * Users with urgent computing needs for large amounts of additional capacity.
+        * If the Spot instance is terminated by Amazon EC2, you will not be charged for a partial hour of usage. However, if you terminate the instance yourself, you will be charged for any hour in which the instance ran.
+      * Dedicated Hosts 
+        * Useful for regulatory requirements that may not support multi-tenant virtualization.
+        * Great for licensing which does not support multi-tenancy or cloud deployments.
+        * Can be purchased On-Demand (hourly)
+        * Can be purchased as a Reservation up to 70% off the On-Demand price.
+    * EC2 Instances Types:
+      * Tip: the number doesn't matter, It's just about generation.
+      ![EC2 Instances Types](./images/ec2_instance_types.png)
+    * EC2 Instances Types 
+      * Fight DoRctor MaC PiXels ZAU
+      ![EC2 Instances Types Mnemonic](./images/instance_types_mnemonic.png)
 
       
 
@@ -305,6 +353,7 @@ Index Topics
       * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
       * S3 Faqs[*](https://www.amazonaws.cn/en/s3/faqs/)
       * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
+      * AWS Pricing Overview[*](https://d1.awsstatic.com/whitepapers/aws_pricing_overview.pdf)
 
 
 
