@@ -1,5 +1,9 @@
 Index Topics
 
+* AWS
+* NIFI
+
+## AWS
  > I’ve always been a software engineer. I used to have a general understanding of what Data Science and Analytics were. **What I didn’t know** was how **important it is** for the data **to respect a few requirements in order to be used effectively**, and how engineers can help make the data readily accessible.
  [*](https://medium.com/bolt-labs/want-to-be-a-data-engineer-heres-what-you-need-to-know-68f7575dc6d8)
 
@@ -343,17 +347,73 @@ Index Topics
     * EC2 Instances Types 
       * Fight DoRctor MaC PiXels ZAU
       ![EC2 Instances Types Mnemonic](./images/instance_types_mnemonic.png)
+    * Tips
+      * Termination Protection is **turned off** by default, you must turn it on.
+      * On an EBS-Backed instance, the **default action is for the root EBS volume to be deleted** when the instance is terminated. 
+      * EBS Root Volumes of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool (such as bit locker etc) to encrypt the root volume, or this can be done when creating AMI's in the AWS console or using API.
+      * Additional volumes can be encrypted.
+    * Security Group
+      * If you apply any change in security group this change take effect immediately.
+      * All inbound traffic is blocked by default.
+      * All Outbound traffic is allowed.
+      * You can have any nymber of EC2 instances within a security group. 
+      * You can have multiple security groups attached to EC2 Instances.
+      * Security group are STATEFUL
+        * If you create an inbound rule allowing traffic in, that traffic is automatically allowed back out again. 
+      * You cannot block specific IP addresses using Security Groups, instead use Network Access Control Lists.
+      * You can specify allow rules, but not deny rules.
+    * What's EBS?
+      * Amazon Elastic Block Store (EBS).
+      * Provides persistent block storage volumes for use with Amazon EC2 Instances.  
+      ![EBS](./images/ebs.png) 
+      * Each EBS volume is automatically replicated within its Availability Zone to protect you from component failure, offering high availability and durability.
+    * 5 Differents Types of EBS Storage
+      * General Purpose (SSD)
+      * Provisioned IOPS (I/O per second) (SDD)
+      * Throughput Optimised Hard Drive Disk
+      * Cold Hard Disk Drive
+      * Magnetic
+      ![EBS](./images/compare_ebs_types.png) 
 
       
 
+## Nifi
+ * What is a Data Flow, Data Pipeline and ETL?
+   * Data Flow
+     * Essentialy moving data/content from Source to Destination. (Batch or Stream)
+   * Data Pipeline
+     * Movement and Transformation of Data/content from Source to Destionation. (Batch or Stream)
+   * ETL 
+     * Extract, Transform and Load (Batch)
+   * What problem Nifi resolve? 
+     * Source -> Transform -> Destination
+     * You can use a lot of differentes tools, but, you need to remember the 4 V's
+     * 4 V's
+       * Volume
+         * refers to the vast amount of data generated each second.
+       * Velocity
+         * refers to the speed which each data is generated and the speed which data moving from one point to other.
+       * Variety
+         * refers a vast types of data you have treat.
+       * Veracity
+         * refers to the trustness of data.
+     * Support for various input/output formats
+     * Scalable and Reliable for large amount of data and high velocity data. 
+     * etc.
+   * > Apache nifi supports powerful and scalable directed graphs of data routing, transformation and system mediation logic.
+   * > Nifi was built to automate the flow of data between systems. It can propagate any data content from any Source to any Destination.
+  
 
 
 
-  * Utils Links
-      * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
-      * S3 Faqs[*](https://www.amazonaws.cn/en/s3/faqs/)
-      * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
-      * AWS Pricing Overview[*](https://d1.awsstatic.com/whitepapers/aws_pricing_overview.pdf)
+
+## Utils Links
+     
+  * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
+  * S3 Faqs[*](https://www.amazonaws.cn/en/s3/faqs/)
+  * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
+  * AWS Pricing Overview[*](https://d1.awsstatic.com/whitepapers/aws_pricing_overview.pdf)
+  * Apache Nifi Overview[*](https://nifi.apache.org/docs/nifi-docs/html/overview.html)
 
 
 
