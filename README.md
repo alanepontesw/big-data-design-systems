@@ -238,7 +238,7 @@ Index Topics
       * Distribuition 
         * This is the name given the CDN, which consists of a collection of Edge Locations. 
     * What it's mean?
-      * CF can be used to delivery your entire website, including dynamic, static, streaming, and interactive content using a global network of edge locations. Requests for your content are automatically routed to the nearest Edge Location, so content is delivered with the best possible performace.
+      * CF can be used to delivery your entire website, including AMI(Amazon Machine Images), static, streaming, and interactive content using a global network of edge locations. Requests for your content are automatically routed to the nearest Edge Location, so content is delivered with the best possible performace.
     * Types of Distribuition
       * RTMP:    
         * Used for media streaming
@@ -279,8 +279,8 @@ Index Topics
       * Volume Gateway (iSCI)
         * Store Volumes
           * Entire Dataset is stored on site and is assynchronously backed up to S3.
-          * Entire Dataset is stored on S3 and the most frequently accessed data is cached on site.
         * Cached Volumes
+          * Entire Dataset is stored on S3 and the most frequently accessed data is cached on site.
       * Tape Gateway (VTL - Virtual Tape Library)
     * File Gateway (NFS - Network File System)
       * Files are storage in your S3 Buckets, accessed through a Network File System (NFS) mount point. Ownership, permissions, and timestamps are durably stored in S3 in the user-metadata of the object associated with the file. 
@@ -350,9 +350,11 @@ Index Topics
     * Tips
       * Termination Protection is **turned off** by default, you must turn it on.
       * On an EBS-Backed instance, the **default action is for the root EBS volume to be deleted** when the instance is terminated. 
-      * EBS Root Volumes of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool (such as bit locker etc) to encrypt the root volume, or this can be done when creating AMI's in the AWS console or using API.
+      * Additional EBS volume will persist later the EC2 instance were terminated. 
+      * EBS Root Volumes of your DEFAULT AMI(Amazon Machine Images)'s cannot be encrypted. You can also use a third party tool (such as bit locker etc) to encrypt the root volume, or this can be done when creating AMI(Amazon Machine Images)'s in the AWS console or using API.
+      * The root volume is where the OS are.
       * Additional volumes can be encrypted.
-    * Security Group
+  * Security Group
       * If you apply any change in security group this change take effect immediately.
       * All inbound traffic is blocked by default.
       * All Outbound traffic is allowed.
@@ -362,7 +364,7 @@ Index Topics
         * If you create an inbound rule allowing traffic in, that traffic is automatically allowed back out again. 
       * You cannot block specific IP addresses using Security Groups, instead use Network Access Control Lists.
       * You can specify allow rules, but not deny rules.
-    * What's EBS?
+  * What's EBS?
       * Amazon Elastic Block Store (EBS).
       * Provides persistent block storage volumes for use with Amazon EC2 Instances.  
       ![EBS](./images/ebs.png) 
@@ -374,7 +376,209 @@ Index Topics
       * Cold Hard Disk Drive
       * Magnetic
       ![EBS](./images/compare_ebs_types.png) 
-
+    * Tips
+      * **If you wanna create/move a instance in another region, you must to create a snapshot of it then create a AMI(Amazon Machine Images) from this snapshot. After copy the AMI(Amazon Machine Images) from one region to other. Then you can use the copied AMI(Amazon Machine Images) to launch the new EC2 instance in the new region.**
+      * **If you wanna create/move a EC2 volume from one AZ to other, take a snapshot of it,create a AMI(Amazon Machine Images) from the snapshot and then use the AMI(Amazon Machine Images) to launch the EC2 instance in new AZ.**
+      * Volumes exist on EBS. Think of EBS as a virtual virtual hard disk.
+      * Snapshot exist on S3. Think of snapshot as a photograph of the disk.
+      * Snapshots are point in time copies of Volumes.
+      * Snapshots are incremental - only the blocks that have changed since your last snapshot are moved to S3.
+      * The first snapshot will take some time to be created.
+      * You can create a snapshot from a running instance, but it's indicate that you create a snapshot after you stop a instance in order to avoid integrity issues.
+      * You can create AMI(Amazon Machine Images)'s from snapshots and volumes.
+      * You can change EBS volumes sizes on the fly, including changing the size and storage types.
+      * Volumes alwais will be in the same AZ as the EC2 ISNTANCE.
+    * How you can select your AMI'S?
+      * Region
+      * OS
+      * Architecture (32-bit or 64-bit)
+      * Launch Permissions
+      * Storage for the Root Device (Root Device Volume)
+        * You have some options:
+          * Instace Store (**EPHEMERAL STORAGE**) 
+          * EBS Backed Volumes 
+    * Encrypted Volumes
+      * Snapshots of encryted volumes are encrypted automatically
+      * Volumes restored from encrypted snapshots are encrypted automatically.
+      * You can share snapshots, but only them are unecrypted.
+      * These snapshots can be shared with other AWS accounts or made public.
+    * How to create a encrypted snapshot?
+      * Create a snapshot of the unecrypted root device volume
+      * Then do a copy of the snapshot and select the encrypt option
+      * Create a AMI from the encrypted Snapshot
+      * Use that AMI to launch new encrypted instances.
+  *  Cloud Watch
+     *  is a monitoring service to monitor your AWS resources, as well as the application that you run on AWS.
+     *  In essential CW monitor performace.
+     *  Host Level Metrics are:
+        *  CPU
+        *  Network
+        *  Disk
+        *  Status Check (yes or no running?)
+  *  Cloud Trail
+     *  increases visibility into your use and resource activity by recording AWS Management Console actions and API calls. You can identify which users and account called AWS, the source IP address from which the call were made, and when the calls occurred. 
+    ![CloudTrail](./images/cloudtrail.png)
+  * Cloud Watch vs Cloud Trails
+    * CW monitor performance, CT monitor API calls in the AWS platform.
+  * Tips
+    * Cloud Watch can monitor most of AWS as well as your application that run on AWS.
+    * Cloud Watch with EC2 will monitor events every 5 minutes by default.
+    * You can have 1 minute intervals by turning on detailed monitoring
+    * You can create CloudWatch alarms which trigger notifications.
+    * CloudWatch is all about performance. CloudTrail is all about auditing. 
+  * What can I do with CloudWatch?
+    * Create awesome dashboards to see what is happened with your enviroment.
+    * Allows you to set Alarms that notify you when particular thresholds are hit.
+    * CloudWatch Events helps you to respond to state changes in your AWS resources.
+    * CloudWatch Logs helps you to aggregate, monitor and store logs.
+  * AWS Cli
+    * >The AWS Command Line Interface (CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. - aws
+    * You will need to set up access in IAM.
+    * Remember that roles are more secure then storing your access key and secret access key on individual EC2 instances, beyond that roles are easier to manage.
+    * Roles can be assigned to an EC2 instance after it is created using both the console and command line.
+    * Roles are universal - you can use them in any region.
+  * Instance MetaData
+    * Used to get information about an instance (such as public ip)
+    * curl *http://169.254.169.254/latest/meta-data/*
+    * curl *http://169.254.169.254/latest/user-data/*
+  * EFS
+    * > Amazon Elastic File System (Amazon EFS) provides a simple, scalable, elastic file system for Linux-based workloads for use with AWS Cloud services and on-premises resources. It is built to scale on demand to petabytes without disrupting applications, growing and shrinking automatically as you add and remove files, so your applications have the storage they need – when they need it. It is designed to provide massively parallel shared access to thousands of Amazon EC2 instances, enabling your applications to achieve high levels of aggregate throughput and IOPS with consistent low latencies. Amazon EFS is a fully managed service that requires no changes to your existing applications and tools, providing access through a standard file system interface for seamless integration. There is a Standard and an Infrequent Access storage class available with Amazon EFS. Using Lifecycle Management, files not accessed for 30 days will automatically be moved to a cost-optimized Infrequent Access storage class, giving you a simple way to store and access active and infrequently accessed file system data in the same file system while reducing storage costs by up to 85%. Amazon EFS is a regional service storing data within and across multiple Availability Zones (AZs) for high availability and durability. You can access your file systems across AZs, regions, and VPCs and share files between thousands of Amazon EC2 instances and on-premises servers via AWS Direct Connect or AWS VPN. - AWS
+    * Supports for Network File System version 4 (NFSv4) protocol
+    * You only pay for the storage use (no pre-provisioning required)
+    * Can scale up to petabytes
+    * Can support thousands of concorrent NFS connectios.
+    * Data is storage across  multiple AZ's within a region.
+    * Read after Write consistency
+  * EC2 Placement Groups
+    * The name you specify for a placement group must be unique within your AWS account.
+    * Only certain instances can be launched in to a placement group (Compute Optimized, GPU, Memory Optimized, Storage Optimized)
+    * AWS recommend homogenous instances within placement groups.
+    * You cannot merge placement grups.
+    * You cannot move an existing instance into a placement group. You can create an AMI from your existing instance and then launch a new instance from the AMI into a placement group.
+    * There are two types of placement groups:
+      * Clustered Placement group
+        * A cluster placement group is a grouping of instance within a single Availability Zone. Placement groups are recommended for applications that need low lantecy, high network throughput, or both.
+        * Only certain instances can be launched in to a Clustered Placement Group.
+        * Cannot span multiple Availability Zones.
+      * Spread Placement group
+        * is a group of instances that are each placed on distinct underlying hardware
+        * are recommended for applications that have a small number of critical instances that should be kept separate from each other.
+        * Can span multiple Availability Zones.
+  * Database
+    * Relational Database on AWS:
+      * SQLServer, Oracle, PostgreSQL, MySQLServer, Aurora, MariaDB.
+    * RDS
+      * Relational database manager by aws
+      * runs on a virtual machine
+      * You cannot log in to these OS however.
+      * Patching of the RDS Operating Systems and DB is Amazon's responsability.
+      * RDS is NOT Serverless.
+      * Aurora Serverless IS Serverless.
+      *  has two keys features:
+      * Multi AZ - For Disaster Recovery
+      ![DisasterRecovery](./images/disaster-recovery.png)
+      * Read Replicas - For Performance
+      ![Performance](./images/performance.png)
+      * Strategy for Disaster Recovery
+        * You do it using DNS.
+        * ![RDS](./images/rds-disaster-recovery-2.png)
+        * ![RDS](./images/rds-disaster-recovery-1.png)
+      * Strategy for Read Replicas
+        * ![READ-REPLICAS](./images/rds-read-replicas.png)
+      * NoSQL Database: 
+        * > simplicity of design, simpler "horizontal" scaling to clusters of machines (which is a problem for relational databases),[2], finer control over availability and limiting the Object-relational impedance mismatch[9]. The data structures used by NoSQL databases (e.g. key-value, wide column, graph, or document) are different from those used by default in relational databases, making some operations faster in NoSQL. The particular suitability of a given NoSQL database depends on the problem it must solve. Sometimes the data structures used by NoSQL databases are also viewed as "more flexible" than relational database tables.
+        * > Instead, most NoSQL databases offer a concept of "eventual consistency" in which database changes are propagated to all nodes "eventually" (typically within milliseconds) so queries for data might not return updated data immediately or might result in reading data that is not accurate, a problem known as stale reads
+      * DataWarehousing
+        * Used for business intelligence.
+        * Used to pull in very large and comples data sets. Usually used by management to do queries on data.
+      * OLTP vs OLAP
+        * OLTP - Online Transaction Processing differs from OLAP - Online Analytics Processing in terms of the type of queries you will run.
+          * OLTP example: order number 123 pulls up a row of data such as name, address to delivery...
+          * OLAP example: Pulls in a large numbers of record and sum all the orders realized by a country, or a city...
+      * ElastiCache
+        * is a web service that makes it easy to deploy, operate, and scale an in-memory cache in the cloud. The service provide improves the performance of web applications by allowing you to retrieve information from fast, managed, in-memory caches instead of relying entirely on slower disk-based databases.
+        * supports two open-source in memory 
+        * Speed up performance of existing databases (frequent identical queries)
+        * cache engines:
+          * Memcached
+          * Redis
+        * Tips
+          * OLTP
+            * SQLServer, Oracle, PostgreSQL, MySQLServer, Aurora, MariaDB. 
+          * OLAP 
+            * Redshift - For business intelligence or data warehouse.
+          * NoSQL
+            * DynamoDB
+  * Backups for RDS
+    * There are two different types of Backups for RDS
+      * Automated Backups
+        * Allows you to recovery your database to any point in time within a "retetion period". The retetion period can be between one and 35 days. Automated Backups will take a full daily snapshots and will also store transactions logs throughout the day. When you do a recovery, AWS will first choose the most recent daily backup, and then apply transaction logs relevant to that day.  
+        * This allows you to do a point in time recovery down to a second, within the retention period.
+        * Automated Backups are enabled by default.
+        * The backup data is stored in S3 and you get free storage space equal to the size of you database. So if you have an RDS instance of 10Gb, you will get 10 Gb worth of storage.
+        * Backups are taken within a defined window. During the backup window, storage I/O may be suspended while your data is being backed up and you may experience elevated latency.
+        
+      * Database Snapshots
+        * **DB Snapshots** are **done manually** (ie they are user initiated) They are **stored even after you delete the original** RDS instance, **unlike automated backups**.
+      ![RDS BACKUPS](./images/rds-backups.png)
+      * Encryption
+        * **Encryption At Rest**
+          * is supported for **MySQL, Oracle, SQL Server, PostgreSQL, MariaDB & Aurora.** Encryption is **done using the AWS Key Management Service (KMS)**. Once your **RDS instance is encrypted, the data stored at rest in the underlying storage is encrypted, as are its automated backups,read replicas, and snapshots**.
+      * What is Multi AZ?
+        * ![Multi AZ](./images/multi-az.png)
+        * Multi-AZ **allows you to have an exact copy of your production database in another Availability Zone**. **AWS handles the replication for you**, so when your production database is written to, this write will automatically be synchonized to the stand by database.
+        * In the event of planned database maintenace, DB Instance failure, or an Availability Zone failure, Amazon RDS will automatically failover to the standby so that database operations can resume quickly without administrative intervention.
+        * Multi-AZ **is for disaster recovery only.**
+          * It's not primarily used for improving performance, if you wanna performance improvement, you need Read Replicas.
+        * Multi AZ is available for: 
+          * SQL Server, 
+          * Oracle
+          * MySQL Server
+          * PostgreSQL
+          * MariaDB
+      * What is a Read Replica?
+        * ![Read Replica](./images/read-replicas.png)
+        * Read Replicas allow you to have a read-only copy of your production database. This is achieved by using Asynchronous replication from the primary RDS instance to the replica. You use read replicas primarily for very read-heavy database workloads.
+        * Read Replicas are available for:
+          * MySQL Server
+          * PostgreSQL
+          * MariaDB
+          * Aurora
+        * Used for scaling not for disaster recovery
+        * must have automatic backups turned on in order to deploy a read replica.
+        * you can have up to 5 read replica copies of any database.
+        * you can have read replicas of read replicas (but watch out for latency)
+        * Each Read Replica will have its own DNS endpoint.
+        * You can have read replicas that have Multi AZ.
+        * You can create read replicas of Multi AZ source databases.
+        * Read replicas can be promoted to be their own databases, it means, to be master. This breaks the replication.
+        * You can a read replica in differents regions. 
+  * DynamoDB
+    * > Amazon DynamoDB is a key-value and document database that delivers single-digit millisecond performance at any scale. It's a fully managed, multiregion, multimaster database with built-in security, backup and restore, and in-memory caching for internet-scale applications. DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.
+    * > Many of the world's fastest growing businesses such as Lyft, Airbnb, and Redfin as well as enterprises such as Samsung, Toyota, and Capital One depend on the scale and performance of DynamoDB to support their mission-critical workloads.
+    * Stored on SSD storage, that's why is so fast.
+    * Spread across 3 geographically distinct data centres.
+    * **Eventual Consistent Reads (Default)**
+    * **Strongly Consistent Reads**
+    * Whats mean Eventual Consistent Read?
+      * Consistency across all copies of data is usually reached within a second. Repeating a read after a short time should return the updated data (Best Read Performance)
+    * Whats mean Strongly Consistent Read?
+      * A strongly consistent read return a result that reflects all writes that received a successful response prior to the read.
+  * Redshift
+    * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
+    * Redshift can be configured as follows
+      * Single Node (160Gb)
+      * Multi Node
+        * Leader Node (manages client connections and receives queries) 
+        * Compute Node (store data and performs queries and computations). Up to 128 Compute Nodes.
+        ![Redshift](./images/redshift.png)
+      * Massively Parallel Processing (MPP)
+        * Automatically distributes data and query load across all nodes. Amazon Redshift makes it easy to add nodes to your data warehouse and enables you to maintain fast query performance as you data warehouse grows.
+      * Backups
+        * Enabled default with a 1 day retention period.
+        * Maximum retention period is 35 days.
+        * Redshift always attempts to maintain at least three copies of your data (the original and replica on the compute nodes and backup in Amazon S3)
+        * Redshift can also asynchronously replicate your snapshots to S3 in another region for disaster recovery. 
       
 
 ## Nifi
@@ -402,8 +606,42 @@ Index Topics
      * etc.
    * > Apache nifi supports powerful and scalable directed graphs of data routing, transformation and system mediation logic.
    * > Nifi was built to automate the flow of data between systems. It can propagate any data content from any Source to any Destination.
-  
-
+ * Core Terminologies
+   * Flow Based Programming
+     * >In computer programming, Flow-Based Programming (FBP) is a programming paradigm, discovered/invented by J. Paul Rodker Morrison in the late '60s, that uses a "data processing factory" metaphor for designing and building applications. FBP defines applications as networks of "black box" processes, which communicate via data chunks (called Information Packets) travelling across predefined connections (think "conveyor belts"), where the connections are specified externally to the processes. These black box processes can be reconnected endlessly to form different applications without having to be changed internally. FBP is thus naturally component-oriented. [*](http://www.jpaulmorrison.com/fbp/)
+   * We can say that Nifi has atomic elements which can be combined to create a data flow, essentialy theses groups are called Processors and Process Gruops. 
+   * What is a Processor?
+     * It's a atomic element that realize a task.
+     * Each Processor is unique, it means, realize a well defined task.
+     * Nifi has a lot of **Data Source**[*](https://www.computerhope.com/jargon/s/sourdata.htm) and **Data Sink**[*](https://www.computerhope.com/jargon/d/datasink.htm) Processors. 
+       * By example, SQL, NOSQL, SearchEngine, MQ, AWS, GCP, etc.
+     * Processors can be built in or custom, it means, createde by yourselve.
+   * What is a Flow File?
+     * Actual Data that is propagate by Nifi, can be a CVC, JSON, BINARY File, SQL, etc.
+     * A Processor can be generate new Flow File by processing an existing Flow File or ingesting new Flow Files from any source.
+     * Content & Attributes?
+       * Content:
+         * It's the actual content of a file, you can read it using GetFile, GetHttp.
+       * Attributes:
+         * These are the metadata from the FlowFile
+         * Contains information about the content: when it was created, its name, where's from.
+     * A Processor can add, update or remove attr of a FlowFile or even change your content.
+     * Life Cycle of FlowFile
+       * It's persisted in the Disk
+       * It's passed-by-reference
+       * A new FlowFile just will be created if the content of existing FlowFile is modified or new data is ingested from source.
+       * A new FlowFile will not be created if just attr of the existing FlowFile is modified.
+   * What is a Connection?
+     * Each Processor can be connected with other to create a data processing flow.
+     * Each connection will act as a Queue for FlowFiles.
+   * What is a Process Group?
+     * It's a set of processors.
+     * It's a way to improve the reability of your systems. 
+     * Input and Output ports are used to move data between Process Group.
+   * What is a Controller Service?
+     * It's a shared service that can be used by a Processor, it be hold DB Connections Details, AWS Credentials, etc.
+   
+     
 
 
 
@@ -414,6 +652,26 @@ Index Topics
   * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
   * AWS Pricing Overview[*](https://d1.awsstatic.com/whitepapers/aws_pricing_overview.pdf)
   * Apache Nifi Overview[*](https://nifi.apache.org/docs/nifi-docs/html/overview.html)
+  * Flow Based Programming[*](http://www.jpaulmorrison.com/fbp/)
+  * AWS Question Associate level[*](https://d1.awsstatic.com/training-and-certification/docs/AWS_Certified_Solutions_Architect_Associate_Sample_Questions.pdf)
+  * Focus on the following FAQs.
+    * Amazon EC2
+    * Amazon S3
+    * Amazon VPC
+    * Amazon Route 53
+    * Amazon RDS
+    * Amazon SQS
+  * AWS Associate Udemy Course Question[*](https://github.com/jsbonso/AWS-Certified-Solutions-Architect-Associate-Practice-Exams-SAA-C01-New-Version)
+  * Types of Performance Data[*](https://www.linkedin.com/pulse/types-performance-data-stephen-townshend/)
+  * Books and papers for high performance[*](https://github.com/sjtuhjh/appdocs/tree/master/BooksAndPapers)
+  * Kappa Architecrure[*](http://milinda.pathirage.org/kappa-architecture.com/)
+  * Streaming Data from MongoDB into Kafka with Kafka Connect and Debezium[*](https://rmoff.net/2018/03/27/streaming-data-from-mongodb-into-kafka-with-kafka-connect-and-debezium/)
+## Interested Tools
+  * Data Studio[*](https://datastudio.google.com/u/0/)
+    * >Reports lets you create reports and data visualizations. Data Sources are reusable components that connect a report to your data, such as Google Analytics, Google Sheets, Google AdWords and so forth.
+
+## Interested Topics
+  * Realease Engineering
 
 
 
