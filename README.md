@@ -354,6 +354,7 @@ Index Topics
       * EBS Root Volumes of your DEFAULT AMI(Amazon Machine Images)'s cannot be encrypted. You can also use a third party tool (such as bit locker etc) to encrypt the root volume, or this can be done when creating AMI(Amazon Machine Images)'s in the AWS console or using API.
       * The root volume is where the OS are.
       * Additional volumes can be encrypted.
+      * If an Amazon EBS volume is an additional partition (not the root volume), I can detach it without stopping the instance, although it may take some time.
   * Security Group
       * If you apply any change in security group this change take effect immediately.
       * All inbound traffic is blocked by default.
@@ -453,7 +454,7 @@ Index Topics
     * The name you specify for a placement group must be unique within your AWS account.
     * Only certain instances can be launched in to a placement group (Compute Optimized, GPU, Memory Optimized, Storage Optimized)
     * AWS recommend homogenous instances within placement groups.
-    * You cannot merge placement grups.
+    * You cannot merge placement groups.
     * You cannot move an existing instance into a placement group. You can create an AMI from your existing instance and then launch a new instance from the AMI into a placement group.
     * There are two types of placement groups:
       * Clustered Placement group
@@ -469,8 +470,8 @@ Index Topics
       * SQLServer, Oracle, PostgreSQL, MySQLServer, Aurora, MariaDB.
     * RDS
       * Relational database manager by aws
-      * runs on a virtual machine
-      * You cannot log in to these OS however.
+      * **runs on a virtual machine**
+      * **You cannot log in to these OS however.**
       * Patching of the RDS Operating Systems and DB is Amazon's responsability.
       * RDS is NOT Serverless.
       * Aurora Serverless IS Serverless.
@@ -565,6 +566,7 @@ Index Topics
     * Whats mean Strongly Consistent Read?
       * A strongly consistent read return a result that reflects all writes that received a successful response prior to the read.
   * Redshift
+    * for business intelligence
     * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
     * Redshift can be configured as follows
       * Single Node (160Gb)
@@ -578,8 +580,233 @@ Index Topics
         * Enabled default with a 1 day retention period.
         * Maximum retention period is 35 days.
         * Redshift always attempts to maintain at least three copies of your data (the original and replica on the compute nodes and backup in Amazon S3)
-        * Redshift can also asynchronously replicate your snapshots to S3 in another region for disaster recovery. 
-      
+        * Redshift can also **asynchronously replicate your snapshots to S3** in another region **for disaster recovery.**
+      * Redshift is priced follow
+        * Compute Node Hours (total number of hours you run across all your compute nodes for the billing period. You are billed for 1 unit per node per hour so a 3-node data warehouse cluster running persistently for an entire month would incur 2.160 instance hours. You will not be charged for leader node hours; only compute nodes will incur charges.) 
+        * Backup
+        * Data Transfer (only within a VPC, not outside it)
+      * Security
+        * Encrypt in transit using **SSL**.
+        * Encrypt at Rest using **AES-256** encription
+        * By default Redshift takes cara of key management.
+          * Manage your own keys through **HSM**
+          * **AWS Key Management Service**
+      * Availability 
+        * Current only available in 1AZ.
+        * Can restore snapshots to new AZs in the events of an outage.
+  * Aurora
+    * > Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud, that combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases.
+
+    * > Amazon Aurora is up to five times faster than standard MySQL databases and three times faster than standard PostgreSQL databases. It provides the security, availability, and reliability of commercial databases at 1/10th the cost. Amazon Aurora is fully managed by Amazon Relational Database Service (RDS), which automates time-consuming administration tasks like hardware provisioning, database setup, patching, and backups.
+
+    * > Amazon Aurora features a distributed, fault-tolerant, self-healing storage system that auto-scales up to 64TB per database instance. It delivers high performance and availability with up to 15 low-latency read replicas, point-in-time recovery, continuous backup to Amazon S3, and replication across three Availability Zones (AZs).
+    * Cools things about Aurora
+      * Start with 10GB, Scales in 10GB increments to 64TB (Storage Autoscaling)
+      * Compute resources can scale up to 32vCPUs and 244GB of Memory.
+      * 2 copies of your data is contained in each availability zone, with minimum of 3 AZ. It means, 6 copies of your data.
+      * transparently handle the loss of up to two copies of data without affecting database write availability and up three copies without affecting read availability.
+      * Aurora storage **is also self-healing**. Data blocks and disks are continuously scanned for errors and repaired automatically.
+      * ![Aurora Scaling](./images/aurora-scaling.png)
+    * Backups
+      * Automated Backups are always enabled on Amazon Aurora DB Instances. Backups do not impact database performance.
+      * You can also take snapshots with Aurora. This also does not impact on performance.
+      * You can share Aurora Snapshots with other AWS accounts. 
+      * 2 types of replicas available. Aurora Replicas and MySQL replicas. Automated failover is only available with Aurora Replicas.
+  * Elastic Cache
+    * > Amazon ElastiCache offers fully managed Redis and Memcached. Seamlessly deploy, run, and scale popular open source compatible in-memory data stores. Build data-intensive apps or improve the performance of your existing apps by retrieving data from high throughput and low latency in-memory data stores. 
+    * > Improves the performance of web applications by allowing you to retrieve information fast, managed, in-memory caches, instead of relying entirely on slower disk-based databases.
+    * Support two engines:
+      * memcached
+      * redis
+      * ![memcached vs redis](./images/memcached-vs-redis.png)
+  * DNS
+    * What's DNS?
+      * DNS is used to convert human friendly domain names (http://www.google.com) into an Intert Protocol (IP) address (http://123.43.23.22)
+      * IP address are used by computers to identify each other on the network. IP addresses commonly come in 2 different forms IPv4 and IPv6. 
+      * ![dns](./images/dns.png)
+    * IPv4 vs IPv6
+      * IPv4 space is 32bit field and has over 4 billion different addresses.
+      * IPv6 was created to solve this depletion issue and has an address space of 128bits which in teory is 340 undecilion addresses.
+    * Top level Domains
+      * The last word in a domain name represents the "top level domain". The second word in a domain name is known as a second level domain name (this is optional though and depends on the domain name.)
+      * .com
+      * .com.br
+      * .edu
+      * These top levels domain name are controlled by the Internet Assigned Numbers Authority ([IANA](https://www.iana.org/domains/root/db)) in a root zone database which is essentially a database of all available top level domains. 
+      * Because all of the names in a given domain have to be unique there needs to be a way to organize this all so that domain names are't duplicated. This is where domain registrars come in. A register is an authority that can assign domain names directly under one or more top level domains.
+      * These domains are registered with InterNIC, a service of ICANN, which enforces uniqueness of domain across the internet. Each domain name becomes registred in a central database known as the **Who'Is database**.
+      * When you bought a domain every DNS begins with a SOA (Start of Authority Record)
+        * Store information about:
+          * The name of the server that supplied the data for the zone.
+          * The administrator of the zone.
+          * The current version of the data file.
+          * The default number of seconds for the time-to-live file on resources records.
+      * NS stands for Name Server Records
+        * They are used by Top Level Domain servers to direct traffic to the Content DNS server which contains the authoritative DNS Records.
+        * ![DNS](images/ns-dns.png)
+      * What's an 'A Record'?
+        * The 'A' in 'A Record' stands for Address. The A Record is used by a computer to translate the name of the domain to IP Address.
+      * What's a CNAME?
+        * A canonical name can be used to resolve one domain name to another. For example, www.m.google.com and www.mobile.google.com and both point to the same domain IP address.
+      * Alias Record
+        * They are used to map resource record set in your hosted zone to Elastic Load Balancers, Cloud Front distributions,or S3 buckets that are configured as websites.
+        * Alias records work like a CNAME record in that you can map one DNS name (www.site.com) to another target DNS name (elb123.elb.amazonaws.com)
+      * CNAME vs Alias
+        * A CNAME can't be used for **naked domain**(basically it's a entire domain withou www) names (zone apex record). You can't have a CNAME for http://google.com, it must be either an A Record or an Alias.
+  * Route53 (route 66 and DNS Port 53)
+    * ELB's do not have pre-defined IPv4 addresses; you resolve to them using a DNS name.
+    * Common DNS Types:
+      * SOA Records
+      * NS Records
+      * A Records
+      * CNAMES
+      * MX Records
+      * PTR Records
+    * It's possible to buy domain names directly with AWS.
+      * It can takes up to 3 days to register depending on the circumstances.
+    * Routing Policies availables for Route53
+      * Simple Routing
+      * Weighted Routing
+      * Latency-based Routing
+      * Failover Routing
+      * Geolocation Routing
+      * Geoproximity Routing (Traffic Flow Only)
+      * Multivalue Answer Routing
+    * Simple Routing
+      * You can only have one record with multiple IP Addresses. If you specify multiples values in a record, Route 53 return all values to the user in a random order. 
+      * ![Simple Routing](images/simple-routing.png)
+    *  Weighted Routing
+       *  Allows you split your traffic based on different weights assigned.
+       *  For example, you can set 10% of your traffic to go to US-EAST-1 and 90% EU-WEST-1
+       *  ![Weighted-routing](images/weight-routing.png)
+    *  Health Checks
+       *  You can set health checks on individual record sets
+       *  if a record set fails a health check it will be removed from Route53 until passes the health check.
+       *  You can set SNS notifications to alert you if a health check is failed.
+    *  Latency-Based Routing
+       *  Allows you to route your traffic based on the lowest network latency for your end user.
+       *  To use latency-based routing, you create a latency resource record set for the Amazon EC2 (or ELB) resource in each region that host your website. When Amazon Route53 receives a query for your site, it selects the latency resources record set for the region that given the user the lowest latency. Route53 then responds with the value associated with that resource record set.
+       *  ![latency-based-routing](images/latency-based-routing.png)
+    *  Failover Routing Policy
+       *  Failover Routing Policy are used when you want to create an active/passive set up. For example,you may want your primary site to be in EU-WEST-2 and your secondary DR Site in AP-SHOUTHEST-2.
+       *  Route 53 will monitor the health of your primary site using a health check.
+       *  A health check monitors the health of your end points.
+       *  ![Failover routing policy](images/failover-routing-policy.png)
+    *  Geolocation Routing Policy
+       *  Lets you choose where your traffic will be sent based on geographic location of your users (ie the location from which DNS queries originate). For example, you might want all queries from Europe to be routed to a fleet of EC2 instances that are specifically configured for your European customers. These servers may have the local language of your European customers and all price are displayed in Euros.
+       *  ![Geolocation Rouring Policy](images/geolocation-routing-policy.png)
+    *  Geoproximity Routing (Traffic Flow Only)
+       *  Geoproximity Routing lets Amazon Route 53 route traffic to your resources based on the geographic location of your users and your resources. You can also optionally choose to route more traffic or less to a given resources by specifying a value, known a bies. A bies expands or shrinks the size of the geographic from which traffic is routed to a resource.
+       *  **To use Geoproximity Routing, you must use Route 53 traffic flow.**
+    *  Multivalue Answer Policy
+       * Multivalue Answer Routing lets your configure Amazon Route 53 to return multiple values, such as IP addresses for your web servers, in response to DNS queries. You can specify multiple values for almost any record, but multivalue answer routing also lets you check the health of each resource, so Route 53 returns only values for healthy resources.
+       * This is similar to simple routing however it allows you to put health checks on each record set.
+       * ![Multivalue Aswer](images/multivalue-answer.png) 
+  * VPC
+    * What is a VPC?
+      * Think of a VPC as a logical datacenter in AWS.
+      * 1 Subnet must be in 1 Availability Zone
+      * Secutiry group are Statefull; Network Access Control Lists are Stateless.
+      * **Amazon Virtual Private Cloud (VPC)** lets you provision isolated section of Amazon Web Service (AWS) Cloud where you can launch AWS resources in a virtual network that you define. **You have complete control over your virtual network environment**, including selection of your own IP address range, creation of subnets, and configuration of route tables and networks gateways.
+      * **You can easily customize the network configuration for your Amazon Virtual Private Cloud**. For example, you can create a public-facing subnet for your webservers that has access to the internet, and place your backend systems such as databases or application servers in a private-facing subnet with no internet access. You can leverage multiples layers of security, including security groups and networks access control lists, to help control access to Amazon EC2 instances in each subnet.
+      * Additionally, you can create a Hardware Virtual Private Network (VPN) connection between your corporate datacenter and your VPC and leverage the AWS cloud as an extesion of your corporate datacenter.
+      * You can have only one Internet Gateway per VPC.
+      * ![VCP Subnet](images/vpc-subnet.png)
+    * What we can do with a VPC?
+      * Launch instances into a subnet of your choosing.
+      * Assign custom IP address ranges in each subnet. 
+      * Configure route tables between subnets
+      * Create internal gateway and attach it to your VPC.
+      * Much better security control over your AWS resources.
+      * Instance security groups
+      * Subnet network access control lists (ACLS)
+    * Default VPC vs Custom VPC?
+      * Default VPC is user friendly, allowing you to immediately deploy instances
+      * All subnets in default VPC have a route out to the internet.
+      * Each EC2 instance has both a public and a private IP Address.
+    * VPC Peering
+      * Allows you to connect one VPC with another via a direct network route using private IP addresses.
+      *  Instance behave as if they were on the same private network.
+      *  You can peer VPC's with other AWS Accounts as well as with other VPC's in the same account.
+      *  Peering is in a star configuration: ie. 1 central VPC peers with 4 other. NO TRANSITIVE PEERING.
+      *  You can peer between regions.
+      *  ![VPC PEERING](images/vpc-peering.png) 
+      *  As you creating a VPC it's look like:
+         *  when you create a VPC you have a default Route Table, Network Access Control List (NACL) and a Default Security Group
+         *  It won't create any subnet, nor will it create a default internet gateway.
+         *  US-EAST-1A in your AWS account can be a completely different availability zone to US-EAST-1A in another AWS Account. The AZ's are randomized. 
+         *  Amazon Always reserve 5 IP addresses within your subnets.
+         *  You can have only 1 Internet Gateway per VPC.
+         ![VPC AS YOU CREATING](images/default-creating-vpc.png)
+    * Nat Instances vs Nat Gateway
+      * ![Nat Gateway](images/nat-gateway.png)
+      * When creating a Nat Instance disable Source/Destination Check on Instance.
+      * Nat Instance must be in a public subnet.
+      * There must be a route out of the private subnet to the Nat instance, in order for this work.
+      * The amount of traffic that NAT Instances can support depends on instance size. If you are bottlenecking, increase the instance size.
+      * You can create high availability using Autoscaling Groups, multiple subnets in differents AZs, and a script to automate failover.
+      * Behind a Security Group.
+    * Nat Gateways
+      * Redundant inside the Availability Zone
+      * Preferred by the enterprise.
+      * Starts at 5Gbps and scales currently to 45Gbps
+      * No need to patch
+      * Not associated with security groups.
+      * Automatically assigned a public ip address.
+      * Remember to update your route tables.
+      * No need to disable Source/Destination Checks.
+      * **Remember** if you have resources in multiple Availability Zone and they share one NAT Gateway, in the event that the NAT gateway's Availability Zone is down, resources in the other AZ lose internet access. To create an AZ independent architecture, create a NAT Gateway in each AZ and configure your routing to ensure that resources use the NAT gateway in the same AZ.
+    * NACL (Network Access Control List) vs Security Groups
+      * Your VPC automatically comes a default network ACL, and by default it allows all outbound and inbound traffic.
+      * You can create custom network ACLs. By default, each custom network ACL denies all inbound and outbound traffic until you add rules.
+      * Each subnet in your VPC must be associated with a network ACL. If you don't explicity associate a subnet with a network ACL, the subnet is automatically associated with the default network ACL.
+      * Block IP Addresses using network ACLs not Security Group.
+      * You can associate a network ACL with multiples subnets. However, a subnet can be associated with only one network ACL at a time. When you associate a network ACL with a subnet, the previous association is removed.
+      * Network ACLs contain a numbered list of rules that is evaluated in order, starting with the lowest numbered rule.
+      * Network ACLs have separate inbound and outbound rules, and each rule can either allow or deny traffic.
+      * Network ACLs are stateless. Responses to allowed inbound traffic are subject to the rules for outbound traffic (and vice versa)
+    * FLow Logs
+      * > VPC Flow Logs is a feature that enables you to capture information about the IP traffic going to and from network interfaces in your VPC. Flow log data can be published to Amazon CloudWatch Logs and Amazon S3. After you've created a flow log, you can retrieve and view its data in the chosen destination.
+
+      * > Flow logs can help you with a number of tasks; for example, to troubleshoot why specific traffic is not reaching an instance, which in turn helps you diagnose overly restrictive security group rules. You can also use flow logs as a security tool to monitor the traffic that is reaching your instance.
+      * Flow Logs can be created at 3 levels:
+        * VPC
+        * Subnet
+        * Network Interface Level
+      * Tips
+        * You cannot enable flow logs for VPC's that are peered with your VPC unless the peer VPC is in your account.
+        * You cannot tag a flow log.
+        * After you've created a flow log, you cannot change its configuration; for example, you can't associate a different IAM role with the flow log.
+      * Not ALL IP traffic is monitored
+        * Traffic generated by instances when they contact the Amazon AWS DNS Server. If you use your own DNS Server, then all traffic to that DNS server is logged. 
+        * Traffic generated by a Windows instance for Amazon Windows license activation
+        * Traffic to and from 169.254.169.254 for instance metadata.
+        * DHCP Traffic
+        * Traffic to the reserved IP address for the default VPC router.
+      * Bastion host
+        * It's a way to do ssh in your intances in a private subnet
+        * ![Bastion](images/bastions.png)
+        * A Nat Gateway or NAT Instance is used to provide internet traffic to EC2 instance in private subnets.
+        * A bastion is used to securely administer EC2 Instances (Using SSH or RDP).
+        * You cannot use a Nat Gateway as a Bastion Host
+      * Direct Connect
+        * AWS Direct Connect is a cloud service solution that makes it easy to estabilish a dedicated network connection from your premises to AWS. Using AWS Direct Connect, you can establish private connectivity between AWS and your datacenter, office, or colocation environment, which in many cases can reduce you network costs, increase bandwidth throughput, and provide a more consistent network experience than Internet-based connections;
+        * ![AWS DIRECT CONNECTION](images/aws-direct-connect-gateway.png)
+    * VPC Endpoints
+      * Enables you to privately connect your VPC to supported AWS services and VPC Endpoint services powered by Private Link without requiring an internet gatway, NAT device, VPN connection, or AWS Direct Connect connection. Instances in your VPC do not require public IP addresses to communicate with resources in the service. Traffic between your VPC and the other service does not leave the Amazon Network.
+      * Endpoints are virtual devices. They are horizontally scaled, redundant, and highly available VPC Components that allow communication between instances in your VPC and services without imposing availability risks or bandwidth constraints on your network traffic.
+    * There are 2 types:
+      * Interface Endpoint
+      * Gateway Endpoint
+    * ![Interface Endpoint](images/interface-endpoint.png)
+    * Gateway Endpoints support:
+      * DynamoDB
+      * S3
+    * ![Gateway Endpoint](images/gateway-endpoint.png)
+
+
+
+
 
 ## Nifi
  * What is a Data Flow, Data Pipeline and ETL?
@@ -642,11 +869,175 @@ Index Topics
      * It's a shared service that can be used by a Processor, it be hold DB Connections Details, AWS Credentials, etc.
    
      
+## Designing Data-Intensive Applications
+* References[*](https://github.com/ept/ddia-references)
+* > **Technology is a powerful force in our society**. Data, software, and communication **can be used for bad**: to entrench unfair power structures, to undermine human rights, and
+to protect vested interests. **But they can also be used for good**: to make underrepresented
+people’s voices heard, to create opportunities for everyone, and to avert disasters. **This
+book is dedicated to everyone working toward the good.**
+* > you have probably been bombarded with a plethora of buzz‐
+words relating to storage and processing of data. NoSQL! Big Data! Web-scale!
+Sharding! Eventual consistency! ACID! CAP theorem! Cloud services! MapReduce!
+Real-time!
+* > Fortunately, behind the rapid changes in technology, there are enduring principles
+that remain true, no matter which version of a particular tool you are using. If you
+understand those principles, you’re in a position to see where each tool fits in, how to
+make good use of it, and how to avoid its pitfalls. That’s where this book comes in.
+* What is a data-intensive applications?
+  * > We call an application data-intensive if data
+is its primary challenge—the quantity of data, the complexity of data, or the speed at which it is changing—as opposed to compute-intensive, where CPU cycles are the
+bottleneck.
+* Reliability vs Scalability vs Maintainability
+* ![realia-scala-maintaina-bilitiy](./images/realia-scala-maintaina-bilitiy.png)
+* A data-intensive application is typically built from standard building blocks that provide commonly needed functionality. For example, many applications need to:
+  * Store data so that they, or another application, can find it again later **(databases)**
+  * Remember the result of an expensive operation, to speed up reads **(caches)**
+  * Allow users to search data by keyword or filter it in various ways **(search indexes)**
+  * Send a message to another process, to be handled asynchronously **(stream processing)**
+  * Periodically crunch a large amount of accumulated data **(batch processing)**
+* Sample arch
+  * ![Sample One](images/arch-one.png)
+  * > If you are designing a data system or service, a lot of tricky questions arise. How do you ensure that the data remains correct and complete, even when things go wrong internally? How do you provide consistently good performance to clients, even when parts of your system are degraded? How do you scale to handle an increase in load?
+  What does a good API for the service look like?
+  There are many factors that may influence the design of a data system. Those factors depend very much on the situation.
+* We focus on three concerns that are important in most software systems: Reliability, Scalability, Maintanability.
+  * Reliability:
+    * **The system should continue to work correctly (performing the correct function at the desired level of performance) even in the face of adversity (hardware or software faults, and even human error)**
+    * The things that **can go wrong are called faults**, and **systems that anticipate faults and can cope with them are called fault-tolerant or resilient**.
+    * The former term is slightly misleading: it suggests that we could make a system tolerant of every possible kind of fault, which in reality is not feasible. If the entire planet Earth (and all servers on it) were swallowed by a black hole, tolerance of that fault would require web hosting in space.
+    * in such fault-tolerant systems, it can make sense to increase the rate of faults by triggering them deliberately—for example, by randomly killing individual processes without warning. Many critical bugs are actually due to poor error handling [3]; by deliberately inducing faults, you ensure that the fault-tolerance machinery is continually exercised and tested, which can increase your confidence that faults will be handled correctly when they occur naturally. The Netflix Chaos Monkey [4] is an example of this approach.
+      * Hardware Faults
+      * Software Faults
+      * Human Faults
+        * How do we make our systems reliable, in spite of unreliable humans? The best sys‐
+        tems combine several approaches:
+        * Design systems in a way that minimizes opportunities for error. For example,
+        well-designed abstractions, APIs, and admin interfaces make it easy to do “the
+        right thing” and discourage “the wrong thing.” However, if the interfaces are too
+        restrictive people will work around them, negating their benefit, so this is a tricky
+        balance to get right.
+        * Decouple the places where people make the most mistakes from the places where
+        they can cause failures. In particular, provide fully featured non-production
+        sandbox environments where people can explore and experiment safely, using
+        real data, without affecting real users.
+        * Test thoroughly at all levels,from unit tests to whole-system integration tests and
+        manual tests [3]. Automated testing is widely used, well understood, and especially valuable for covering corner cases that rarely arise in normal operation.
+        * Allow quick and easy recovery from human errors, to minimize the impact in the case of a failure. For example, make it fast to roll back configuration changes, roll out new code gradually (so that any unexpected bugs affect only a small subset of users), and provide tools to recompute data (in case it turns out that the old computation was incorrect).
+        * Set up detailed and clear monitoring, such as performance metrics and error rates. In other engineering disciplines this is referred to as telemetry. (Once a rocket has left the ground, telemetry is essential for tracking what is happening, and for understanding failures [14].) Monitoring can show us early warning signals and allow us to check whether any assumptions or constraints are being violated. When a problem occurs, metrics can be invaluable in diagnosing the issue.
+  * Scalability:
+    * **As the system grows (in data volume, traffic volume, or complexity), there should be reasonable ways of dealing with that growth.**
+    * Load
+      * > **First, we need to succinctly describe the current load on the system; only then can we
+      discuss growth questions (what happens if our load doubles?). Load can be described
+      with a few numbers which we call load parameters. The best choice of parameters
+      depends on the architecture of your system: it may be requests per second to a web
+      server, the ratio of reads to writes in a database, the number of simultaneously active
+      users in a chat room, the hit rate on a cache, or something else. Perhaps the average
+      case is what matters for you, or perhaps your bottleneck is dominated by a small
+      number of extreme cases.**
+      * Performance
+        * **Once you have described the load on your system, you can investigate what happens
+        when the load increases. You can look at it in two ways:
+        • When you increase a load parameter and keep the system resources (CPU, mem‐
+        ory, network bandwidth, etc.) unchanged, how is the performance of your system
+        affected?
+        • When you increase a load parameter, how much do you need to increase the
+        resources if you want to keep performance unchanged?**
+        * In a batch processing system such as Hadoop, we usually care about **throughput**—**the
+        number of records we can process per second, or the total time it takes to run a job
+        on a dataset of a certain size.**
+        * > **(In an ideal world, the running time of a batch job is the size of the dataset divided by the throughput. In
+        practice, the running time is often longer, due to skew (data not being spread evenly across worker processes)
+        and needing to wait for the slowest task to complete.)**
+        * In online systems, what’s usually more important is the service’s response time—that is, the time between a client sending a request and
+        receiving a response.
+        * > Latency and response time are often used synonymously, but they are not the same. The response time is what the client sees: besides the actual time to process the request (the service time), it includes
+        network delays and queueing delays. Latency is the duration that a request is waiting to be handled—during which it is latent, awaiting service.
+        * Even if you only make the same request over and over again, you’ll get a slightly different response time on every try... 
+          * Perhaps the slow requests are intrinsically more expensive, e.g., because they process more data. But even in a scenario where you’d
+          think all requests should take the same time, you get variation: random additional
+          latency could be introduced by a context switch to a background process, the loss of a network packet and TCP retransmission, a garbage collection pause, a page fault
+          forcing a read from disk, mechanical vibrations in the server rack [18], or many other causes.
+          * Queueing delays often account for a large part of the response time at high percentiles. As a server can only process a small number of things in parallel (limited, for by its number of CPU cores), it only takes a small number of slow requests to hold up the processing of subsequent requests—an effect sometimes known as **head-of-line blocking.**
+          * Even if only a small percentage of backend calls are slow, the chance of getting a slow call increases if an end-user request requires multiple backend calls, and so a higher proportion of end-user requests end up being slow (an
+          effect known as **tail latency amplification**)
+          ![Slow Request](images/slow-request.png)
+        * Dichotomy between **scaling up** (vertical scaling, moving to a
+        more powerful machine) and **scaling out** (horizontal scaling distributing the load across multiple smaller machines)
 
+  * Maintanability 
+    * **Over time, many different people will work on the system (engineering and operations, both maintaining current behavior and adapting the system to new use cases), and they should all be able to work on it productively.**
+      * we will pay particular attention to three design principles for software systems:
+        * Operability
+          Make it easy for operations teams to keep the system running smoothly. 
+        * Simplicity
+          Make it easy for new engineers to understand the system, by removing as much
+          complexity as possible from the system. (Note this is not the same as simplicity
+          of the user interface.)
+        * Evolvability
+          Make it easy for engineers to make changes to the system in the future, adapting
+          it for unanticipated use cases as requirements change. Also known as extensibility, modifiability, or plasticity.
+  * Data Models and Query Languages
+    * > **The limits of my language mean the limits of my world.**
+    —Ludwig Wittgenstein, Tractatus Logico-Philosophicus (1922)
+    * Relational Model vs Document Model
+      * Relational Model
+        * > The relational model was a theoretical proposal, and many people at the time doubted whether it could be implemented efficiently. However, by the mid-1980s,relational database management systems (RDBMSes) and SQL had become the tools of choice for most people who needed to store and query data with some kind of regular structure. The dominance of relational databases has lasted around 25‒30 years —an eternity in computing history.
+        * The goal of the relational model was to hide that implementation detail behind a cleaner interface.
+      * NoSQL
+          *  A need for greater scalability than relational databases can easily achieve, including very large datasets or very high write throughput
+        * There are several driving forces behind the adoption of NoSQL databases, including:
+          *  A widespread preference for free and open source software over commercial
+          database products
+          *  Specialized query operations that are not well supported by the relational model
+          *  Frustration with the restrictiveness of relational schemas, and a desire for a more
+          dynamic and expressive data model [5]
+      * It therefore seems likely that in the foreseeable future, relational databases will continue to be used alongside a broad variety of nonrelational datastores—an idea that is sometimes called **polyglot persistence** [3]
+      * The Object-Relational Mismatch
+        * > if data is stored in
+        relational tables, an awkward translation layer is required between the objects in the application code and the database model of tables, rows, and columns. The disconnect between the models is sometimes called an **impedance mismatch**.
+        * Some developers feel that the JSON model reduces the impedance mismatch between the application code and the storage layer.
+        * If you want to fetch a profile in the relational example, you need to either perform multiple queries (query each table by user_id ) or perform a messy multiway join between the users table and its subordinate tables. In the JSON representation, all the relevant information is in one place, and one query is sufficient.
+        * ![One to Many](images/one-to-many.png)
+      * Removing such duplication is the key idea behind **normalization in databases**.
+       * Unfortunately, **normalizing this data requires many-to-one relationships** (many people live in one particular region, many people work in one particular industry), which don’t fit nicely into the document model. In relational databases, it’s normal to refer to rows in other tables by ID, because joins are easy. In document databases, joins are not needed for one-to-many tree structures, and support for joins is often weak
+     * The relational model
+       * > But a key insight of the
+          relational model was this: you only need to build a query optimizer once, and then all
+          applications that use the database can benefit from it. If you don’t have a query opti‐
+          mizer, it’s easier to handcode the access paths for a particular query than to write a
+          general-purpose optimizer—but the general-purpose solution wins in the long run.
+      * **Comparison to document databases**
+      * > Document databases reverted back to the hierarchical model in one aspect: storing nested records (one-to-many relationships, like positions , education ,and contact_info in Figure 2-1) within their parent record rather than in a separate table. However, when it comes to representing many-to-one and many-to-many relationships, relational and document databases are not fundamentally different: in both cases, the related item is referenced by a unique identifier, which is called a foreign key in the relational model and a document reference in the document model [9].
+      That identifier is resolved at read time by using a join or follow-up queries. To date,
+      document databases have not followed the path of CODASYL.
+      * **The relational technique of shredding** - splitting a document-like structure into multiple tables (like positions, education - can lead to cumbersome schemas and unnecessarily complicated application code
+      * **Document databases are sometimes called schemaless**, but that’s **misleading**, as the code that reads the data usually assumes some kind of structure—i.e., there is an implicit schema, but it is not enforced by the database. **A more accurate term is schema-on-read** (the structure of the data is implicit, and only interpreted when the data is read), in contrast with schema-on-write (the traditional approach of relational databases, where the schema is explicit and the database ensures all written data conforms to it). (schema-on-read -> dynamic languages -> interpreter -> runtime; schema-on-read -> static language -> compiler -> compiletime)
+      * A document is usually stored as a single continuous string, encoded as JSON, XML, or a binary variant thereof (such as MongoDB’s BSON). If your application often needs to access the entire document (for example, to render it on a web page), there is a performance advantage to this **storage locality**. If data is split across multiple tables, multiple index lookups are required to retrieve it all, which may require more disk seeks and take more time
+      * On updates to a document, the entire document usually needs to be rewritten—only modifications that don’t change the encoded size of a document can easily be performed in place [19]. For these reasons, it is generally recommended that you keep documents fairly small and avoid writes that increase the size of a document. These performance limitations significantly reduce the set of situations in which document databases are useful.
 
+  * Case of studies
+    * Twitter 
+      * TODO page 13, describing load
+
+## Google Cloud
+* Overview
+  * ![GCP Overview](images/gcp-overview.png)
+
+## Unrelated Topics
+* Star Schema
+  * http://gkmc.utah.edu/ebis_class/2003s/Oracle/DMB26/A73318/schemas.htm
+  * https://www.vertabelo.com/blog/technical-articles/data-warehouse-modeling-the-star-schema
 
 ## Utils Links
-     
+  * Docker Best Practices[*](https://blog.docker.com/2019/07/intro-guide-to-dockerfile-best-practices/)
+  * How to Build a Data Lake with AWS Glue Data Catalog[*](https://www.youtube.com/watch?v=GObs0r6yOPo)
+  * Grok - More semantic for Regex[*](http://grok.nflabs.com/WhatIsPattern)
+  * Dark Data[*](https://en.wikipedia.org/wiki/Dark_data)
+  * How should I tag my AWS resources?[*](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/)
+  * Security Group vs Network Access Control List(NACL)[*](https://www.quora.com/What-is-the-difference-between-security-groups-and-the-network-access-control-list-in-AWS)
+  * Techical debt time[*](https://medium.com/granify/technical-debt-time-to-pay-up-77f3bf4013a40)
+  * The open guide for AWS Services[*](https://github.com/open-guides/og-aws#clb-basics)    
   * Amazon Storage Class and Cost Optimization[*](https://www.youtube.com/watch?v=wFSv2gSQADI)
   * S3 Faqs[*](https://www.amazonaws.cn/en/s3/faqs/)
   * Snowball Faqs[*](https://aws.amazon.com/snowball/faqs/)
@@ -666,7 +1057,20 @@ Index Topics
   * Books and papers for high performance[*](https://github.com/sjtuhjh/appdocs/tree/master/BooksAndPapers)
   * Kappa Architecrure[*](http://milinda.pathirage.org/kappa-architecture.com/)
   * Streaming Data from MongoDB into Kafka with Kafka Connect and Debezium[*](https://rmoff.net/2018/03/27/streaming-data-from-mongodb-into-kafka-with-kafka-connect-and-debezium/)
+  * Data Flair AWS tutorials[*](https://data-flair.training/blogs/aws-iam-tutorial/)
+  * Serverless Pitfalls[*](https://medium.com/@emaildelivery/serverless-pitfalls-issues-you-may-encounter-running-a-start-up-on-aws-lambda-f242b404f41c)
+  * Web Sockets with Lambda[*](https://www.freecodecamp.org/news/real-time-applications-using-websockets-with-aws-api-gateway-and-lambda-a5bb493e9452/)
+  * My Accidental 3–5x Speed Increase of AWS Lambda Functions[*](https://serverless.zone/my-accidental-3-5x-speed-increase-of-aws-lambda-functions-6d95351197f3)
+  * Your Lambda function might execute twice. Be prepared![*](https://cloudonaut.io/your-lambda-function-might-execute-twice-deal-with-it/)
+  * UUID or GUID as Primary Keys? Be Careful![*](https://tomharrisonjr.com/uuid-or-guid-as-primary-keys-be-careful-7b2aa3dcb439)
+  * Cognito & Okta authentication for Kibana[*](https://medium.com/condenastengineering/cognito-okta-authentication-for-elasticsearch-kibana-1a9d3dd45bcb)
+
+## Readed Books
+* Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
+
 ## Interested Tools
+  * Fluentd https://www.fluentd.org
+  * IP address CIDR[*](http://cidr.xyz/)
   * Data Studio[*](https://datastudio.google.com/u/0/)
     * >Reports lets you create reports and data visualizations. Data Sources are reusable components that connect a report to your data, such as Google Analytics, Google Sheets, Google AdWords and so forth.
 
