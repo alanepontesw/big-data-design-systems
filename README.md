@@ -803,6 +803,142 @@ Index Topics
       * DynamoDB
       * S3
     * ![Gateway Endpoint](images/gateway-endpoint.png)
+* Load Balancer
+  * > Elastic Load Balancing automatically distributes incoming application traffic across multiple targets such as Amazon EC2 instances, containers, IP addresses, and Lambda functions. It can handle the varying load of your application traffic in a single Availability Zone or across multiple Availability Zones. Elastic Load Balancing offers three types of load balancers that all feature the high availability automatic scaling, and robust security necessary to make your applications fault tolerant.
+  * Types:
+    * Application Load Balancers
+    * Network Load Balancers
+    * Classical Load Balancers
+  * Application Load Balancers
+    * best suited for load balancing of HTTP and HTTPS traffic. They operate at Layer 7 and are application aware. They are intelligent, and you can create advanced request routing, sending specified request to specific web servers. 
+  * Network Load Balancers
+    * best suited for load balacing traffic where extreme performance is required. OPerating at the connection level (Layer 4), Network Load Balancer are capable of handling millions of requests per second, while maintaining ultra-low latencies. Use for extreme performance!
+  * Classical Load Balancers
+    * If your application stops reponding, the ELB (Classical Load Balancer) responds with a 504 error. This means that the application is having issues. This could be either at the web server layer or database layer. Identify where the application is failing and scale it up or out where possible.
+  * If you need ipv4 address of your end user, look for the X-Forwarded-For Header.
+  * Instance monitored by ELB are reported as: InService, OutOfService
+  *  Health Checks check the instance health by talking to it.
+  *  Load Balances have their own DNS name, you are never given an IP address.
+  *  What are Sticky Sessions?
+     *  Classic Load Balancer routes each request independently to the registred EC2 instance with the smallest load.
+     *  Sticky Sessions allow you to bind a user's session to a specific EC2 instance. This ensures that all requests from the user during the session are sent to the same instance. 
+     *  You can enable Sticky Session for Application Load Balancers as well, but the traffic will be sent to at the Target Group Level.
+     *  ![Sticky Sessions](images/sticky-sessions.png)
+  *  ![No Cross Zone ELB](images/no-cross-zone-elb.png)
+  *  ![Cross Zones ELB](images/cross-zone-elb.png)
+  *  ![Common Scenario](images/common-scenario.png)
+  *  What are Path Patterns?
+     *  You can create a listener with rules to forward requests based on the URL path. This is known as path-based routing. If you running microservices, you can route traffic to multiples back-end services using path-based routing. For example, you can route general requests to one target group and requests to render images to another target group.
+     *  Using Applications Load Balacers cuz it has intelligent
+     *  [!Path Patterns](imagem/common-scenario.png)
+  *  HA Architecture
+     *  "Everything fails. You should always plan for failure."
+     *  ![simian army](images/simian-army-project.png)
+     *  ![HA architecture](images/ha-architecture.png)
+     *  Tips:
+        *  Use multiple AZ's and multiple regions where ever you can.
+        *  Know the difference between Multi-AZ adn Read Replicas for RDS.
+        *  Know the difference between Scaling Out (Add instance inside a scaling group) and Scaling Up (increase resources inside EC2 instances).
+     *  Example 
+        *  ![Network Diagram](images/network-diagram.png)
+  *  Cloud Formation
+     *  Is a way of completely scripting your cloud environment
+     *  Quick Start is a bunch of CloudFormation templates already built by AWS Solutions Architects allowing you to create complex enviroments very quickly.
+  *  Elastic Beanstalk
+     *  With EB you can quickly deploy and manage applications in the AWS Cloud without worrying about infrastructure that runs those applications. You simply upload your application, and Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring.   
+  *  SQS
+     *  What is SQS?
+        *  Is a web service that gives you access to a message queue that can be used to store messages while waiting for a computer to process them.
+        *  Amazon SQS is a distributed queue system that enables web service applications to quickly and reliably queue messages that one component in the application generates to be consumed by another component. A queue is a temporary repository for messages that are awaiting processing. 
+        *  ![SQS SAMPLE](images/sqs-sample.png)
+        *  ![SQS SAMPLE2](images/sqs-example-ec2.png)
+        *  Using SQS, you can decouple the compenents of an application so they run independendly, easing message management between components. Any component of a distributed application can store messages in a fail-safe queue. Messages can **contain up to 256kb** of text in any format. Any component can later retrieve the messages programatically using the Amazon SQS API.
+        *  The queue acts as a buffer between the component producing and saving data, and the component receiving the fata for processing.
+        *  This means the queue resolves issues that arise if the producer is producing work faster than the consumer can process it, or if the producer or consumer are only intermittently connected to the network.
+        *  There are 2 types:
+           * Stardand Queues (default)
+           * FIFO Queues
+        *  Stardand Queue:
+           * Lets you have a nearly-unlimited number of transactions per second. Standard Queues guarantee that a message is delivered at least once. Hovewer, ocassionally (because the highly-distributed architecture that allows hugh throughput), more than one copy of a message might be delivery out of order. 
+           * Provide best-effort ordering which ensures that messages are generally delivered in the same order as they are sent.
+        * Fifo Queue:
+          * The FIFO queue complements the stardand queue. The most important features of this queue type are FIFO (First-in-first-out) delivery and exactly-once processing: The order in which messages are sent and receives is strictly preserved and a message is delivered once and remains available until a consumer processes and deletes it, duplicates are not introduced into the queue.
+        * SQS is pull based, not pushed based.
+        * Messages can be kept in the queue from 1 minute to 14 days. the default retention is 4 days.
+        * Visibility Time Out is the amount of time that the message is invisible in the SQS queue after a reader picks up that message. Provided the job is processed before the visibility time out expires, the message will then be deleted from the queue. If the job is not processed within that time, the message will become visible again and another reader will process it. This could result in the same message being delivered twice.
+        * Visibility Time Out maximum is 12 hours.
+        * SQS guarantees that you messages will be processed at least one time. 
+        * Amazon SQS long polling is a way to retrieve messages from your Amazon SQS queues. While the regular short polling returns immediately (even if the message queue being polled is empty), long polling doesn't return a response until a messages arrives in the message queue, or the long poll times out.
+   * SWF (Simple WorkFlow)
+     * SWF is a web service that makes easy to coordinate work across distributed applications components. 
+     * SWF enables applications for a range of use cases, including media processing, web application backends, business process workflow, and analytics pipelines, to be designed as a coordination of tasks.
+     * Tasks represent invocations of various processing steps in an application which can be performed by executable code, web service calls, human actions, and scripts.
+   * SWF vs SQS
+     * SQS has a retention period of up to 14 days, with SWF, workflow execution can last up to 1 year.
+     * Amazon SWF presents a task-oriented API, whereas Amazon SQS offers a message-oriented API.
+     * Amazon SWF ensures that a task is assigned only once and is never duplicated. With Amazon SQS, you need to handle duplicated messages and may also need to ensure that a messages is processed only once.
+     * Amazon SWF keeps track of all the tasks and events in an application. With Amazon SQS you need to implement you own application-level tracking, specially if your application uses multiples queues.
+     * SWF Actors
+       * Workflow Staters
+         * An application that can initiate (start) a workflow. Could be your e-commerce website following the placement of an order, or a mobile app searching for bus time.
+       * Deciders
+         * Control the flow of activity tasks in a workflow execution. If something has finished or failed in a workflow, a Decider decides what to do next.
+       * Activity Workers
+         * Carry out the activity tasks.
+     * SNS - Simple Notification Service 
+       * SNS is a webservice that makes easy to set up, operate, and send notifications from the cloud.
+       * It provides developers with highly scalable, flexible, and cost-effective capability to publish messages from an application and immediately deliver them to subcribers  or other applications.
+       * Besides pushing cloud notifications directly to mobile devices Amazon SNS can also deliver notifications by SMS or email to Amazon Simple Queue Service (SQS), or to any HTTP endpoint.
+       * SNS allows you to group multiple recipients using topics. A topic is an "access point" for allowing recipients to dynamically subscribe for identical copies of the same notification
+       * One topic can be support deliveries to multiple endpoints types - for example, you can group tohether IOS, Android, SMS recipients. When you publish once to a topic, SNS delivers appropriately formatted copies your message to each subscriber.
+       * ![SNS TOPIC](images/topic-sns.png)  
+       * ![Multiple AZ](images/sns-m-az.png)
+       * SNS Benefits
+         * Instantaneous, push-based delivery (no polling)
+         * Simple API's and easy integration with applications. 
+         * Flexible message delivery over multiple transport protocols.
+         * Inexpensive, pay-as-you-go model with no up-front costs.
+         * Web-based AWS Management Console offers the simplicity of a point and-click interface.
+       * SNS vs SQS
+         * Both Messanging Services in AWS
+         * SNS - Push
+         * SQS - Polls (Pulls)
+     * Elastic Transcoder
+       * Media Transcoder in the cloud.
+       * Convert media files from their original source format in to differents formats that will play on smartphones, tablets, PCs, etc.
+       * Provides transcoding presents for popular output formats, which means that you don't need to guess about which settings work best on particular devices.
+       * You pay based on the minutes that you transcode and the resolution at which you transcode.
+       * ![sample](images/elastic-transcorder.png)
+   * API Gateway
+     * API Gataway is a fully managed service that makes it easy for developers to publish, maintain, monitor, and secure API's at any scale.
+     * With a few clicks in the AWS Management Console, you can create an API that acts as a "front door" for applications to access data, business logic, or functionality from your back-end services, such as appplications running on Amazon Elastic Cloud (EC2), code running on AWS Lambda, or any web application. 
+     * ![API Gateway](images/async-api-gateway.png)
+   * What Can API Gateways do?
+     * Expose HTTPS endpoints to define a Restfull API
+     * Serverless-ly connect to services like Lambda and DynamoDB
+     * Send each API endpoint to a different target
+     * Run efficiently with low cost
+     * Scale effortlessly 
+     * Track and control usage by API Keys
+     * Throttle request to prevent attacks 
+     * Connect to Cloud Watch to log all request for monitoring
+     * Mantain multiple version of your API.
+     * ![COnfigure API G](images/api-gateway-configure.png)
+     * ![Deploy API G](images/deploy-api-gateway.png)
+     * You can enable API Caching in Amazon API Gateway to cache your endpoint's response. With caching, you can reduce the number of calls made to your endpoint and also improve the latency of the request to your API. When you enable caching for a stage, API Gateways caches responses from your endpoint for a specific TTL (Time to live) period, in seconds. API Gateway then responds to the request by looking up the endpoint response from the cache instead of making a request to your endpoint.
+   * **Some Origin Policy**
+     * In computing, the same-origin policy is an important concept in the web application security model. Under the policy, a web browser permits scripts contained in a first web page to access data in a second web page, but only if both web pages have the same origin.
+     * This is done to prevent **Cross-Site Scripting (XSS) attacks**.
+       *  Enforced by Web Browsers
+       *  Ignored by tools like Postman, Curl
+  * **CORS (Cross Origin Resources Sharing)**
+    * CORS is one way the server at the other end (not the client code in the browser) can relax the same-origin policy.
+    * CORS is a mechanism that allows restricted resources (eg fonts) on a web page to be requested from another domain outside the domain from which the first resource was served.
+  * CORS in Action
+    1. Browser makes an HTTP OPTIONS call for a URL (OPTIONS in http methods like GET, PUT and POST)
+    2. Server returns a response that says:
+       1. "These other domains are approved to GET this URL"
+    * **Error - "Origin policy cannot be read at the remote source?" You need to enables CORS on API Gateway**
 
 
 
@@ -1015,10 +1151,53 @@ bottleneck.
       * **Document databases are sometimes called schemaless**, but that’s **misleading**, as the code that reads the data usually assumes some kind of structure—i.e., there is an implicit schema, but it is not enforced by the database. **A more accurate term is schema-on-read** (the structure of the data is implicit, and only interpreted when the data is read), in contrast with schema-on-write (the traditional approach of relational databases, where the schema is explicit and the database ensures all written data conforms to it). (schema-on-read -> dynamic languages -> interpreter -> runtime; schema-on-read -> static language -> compiler -> compiletime)
       * A document is usually stored as a single continuous string, encoded as JSON, XML, or a binary variant thereof (such as MongoDB’s BSON). If your application often needs to access the entire document (for example, to render it on a web page), there is a performance advantage to this **storage locality**. If data is split across multiple tables, multiple index lookups are required to retrieve it all, which may require more disk seeks and take more time
       * On updates to a document, the entire document usually needs to be rewritten—only modifications that don’t change the encoded size of a document can easily be performed in place [19]. For these reasons, it is generally recommended that you keep documents fairly small and avoid writes that increase the size of a document. These performance limitations significantly reduce the set of situations in which document databases are useful.
+    * MapReduce
+      * MapReduce is a fairly low-level programming model for distributed execution on a cluster of machines. Higher-level query languages like SQL can be implemented as a pipeline of MapReduce operations (see Chapter 10), but there are also many distributed implementations of SQL that don’t use MapReduce. Note there is nothing in SQL that constrains it to running on a single machine, and MapReduce doesn’t have a monopoly on distributed query execution.
+    * We saw earlier that many-to-many relationships are an important distinguishing feature between      different data models. If your application has mostly one-to-many relationships (tree-structured data) or no relationships between records, the document model is appropriate. But what if many-to-many relationships are very common in your data? The relational model can handle simple cases of many-to-many relationships, but as the connections within your data become more complex, it becomes more natural to start modeling your data as a graph.
+    * A graph consists of two kinds of objects: vertices (also known as nodes or entities) and edges (also known as relationships or arcs). Many kinds of data can be modeled as a graph. Typical examples include: 
+      * Social graphs 
+        * Vertices are people, and edges indicate which people know each other. 
+      * The web graph 
+        * Vertices are web pages, and edges indicate HTML links to other pages.
+      * Road or rail networks 
+        * Vertices are junctions, and edges represent the roads or railway lines between them.
+    * There are several different, but related, ways of structuring and querying data in graphs. 
+      * **Property Graph model** 
+        * (implemented by Neo4j, Titan, and InfiniteGraph)
+      * **Triple-store model** 
+        * (implemented by Datomic, AllegroGraph, and others). 
+      * Some three declarative query languages for graphs: 
+        * **Cypher**
+        * **SPARQL**
+        * and **Datalog**. 
+      * There are also imperative graph query languages **such as Gremlin**  and graph processing frameworks like **Pregel**
+    * Property Graph Model: 
+      * Each Vertex consist:
+        * A unique identifier
+        * A set of outgoing edges
+        * A set of incoming edges
+        * A collection of properties (key-value pairs)
+      * Each Edge consist: 
+        * A unique identifier
+        * The vertex at which the edge starts (the tail vertex)
+        * The vertex at which the edge ends (the head vertex)
+        * A label to describe the kind of relationship between the two vertices
+        * A collection of properties (key-value pairs)
 
   * Case of studies
     * Twitter 
       * TODO page 13, describing load
+
+## ECS
+ * ![Key Components](images/key-components.png)
+ * ![Key Components](images/ecs-cluster.png)
+ * ![ECR](images/ecs-ecr.png)
+ * ![Container Instances](images/conteiner-instances.png)
+ * ![Tasks](images/task-definetion.png)
+ * ![Arch ECS](images/arch-ecs-sample.png)
+ * ![ECS EC2 MANAGER](images/ec2-ecs-manager.png)
+ * ![Fargate](images/fargate.png)
+ * ![ECS Constructs](ec2-constructs.png)
 
 ## Google Cloud
 * Overview
@@ -1030,6 +1209,8 @@ bottleneck.
   * https://www.vertabelo.com/blog/technical-articles/data-warehouse-modeling-the-star-schema
 
 ## Utils Links
+  * ECS[*](https://www.youtube.com/watch?v=IEvLkwdFgnU)
+  * Monitoring archs[*](https://dms.licdn.com/playback/C4D05AQFH0hfo6cMoBw/2acff3f4c9884808977143956e879937/feedshare-mp4_3300-captions-thumbnails/1507940147251-drlcss?e=1562788800&v=beta&t=h3n6aSYdKjFwQzTiqLxxbwjv24P7-9FqUbHSkvXzWQo)
   * Docker Best Practices[*](https://blog.docker.com/2019/07/intro-guide-to-dockerfile-best-practices/)
   * How to Build a Data Lake with AWS Glue Data Catalog[*](https://www.youtube.com/watch?v=GObs0r6yOPo)
   * Grok - More semantic for Regex[*](http://grok.nflabs.com/WhatIsPattern)
@@ -1064,6 +1245,7 @@ bottleneck.
   * Your Lambda function might execute twice. Be prepared![*](https://cloudonaut.io/your-lambda-function-might-execute-twice-deal-with-it/)
   * UUID or GUID as Primary Keys? Be Careful![*](https://tomharrisonjr.com/uuid-or-guid-as-primary-keys-be-careful-7b2aa3dcb439)
   * Cognito & Okta authentication for Kibana[*](https://medium.com/condenastengineering/cognito-okta-authentication-for-elasticsearch-kibana-1a9d3dd45bcb)
+  * Construção de data pipelines em Apache Spark[*](https://www.infoq.com/br/presentations/construcao-de-data-pipelines-em-apache-spark/)
 
 ## Readed Books
 * Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
