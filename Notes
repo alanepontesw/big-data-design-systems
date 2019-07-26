@@ -1,0 +1,12 @@
+- I need to re read the vpc endpoint sections
+- I need to understand more IAM Policies.
+- I need to re read about multipart upload
+- I need to understand about SES (47)
+- I need to understand more about ecs and load balancing (55)
+- Deeper streaming process - 51
+- I need to understand DynamoDB Streamings
+- https://media.amazonwebservices.com/AWS_Disaster_Recovery.pdf
+- https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html
+-  aula 49: DynamoDB - Provision Throughput - Read and Write Capacity Units
+- https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html
+- https://media.amazonwebservices.com/AWS_Disaster_Recovery.pdf

@@ -62,6 +62,7 @@ Index Topics
         * These are not the same as a password, you cannot use **Access Key ID** and **Secret Access Key** to login into the console, you just can use theses to access API's and Command Line.
       * Policies
         * Polices as essentially documents theses documents are in a format called JSON and they give permissions as to what a User, Group or Role is able to do.  
+        * Managed Policies have built in versioning support.
         * You can attach a policy to a User, a Role or a Group.
         * ***Here a policy that grants all operations to all S3 buckets:***
             ```
@@ -134,6 +135,7 @@ Index Topics
      *  **S3 Standard is designed for 99.99% availability** and **Amazon guarantee is 99.9% availability**
      *  **S3 Standard IA is designed for 99.99% availability**
      *  Amazon guarantee 99.999999999% of durability
+        *  Probability of loss = 100 - durability
      *  Stored redundantly accross devices in multiples facilities (instalações)
      *  Files are storage in buckets (it means, folders are you put your files)
         *  S3 use a global namespace so bucket must be uniques.
@@ -197,6 +199,7 @@ Index Topics
         * AWS Key Management Services, Managed Keys-SSE-KMS
       * Client Side
     * Versioning
+      * Version stores complete data for every object upload
       * Store all version of an object (including all writes and even if you delete an object)
       * Great backup tool
       * One time enabled cannot be disable, only suspended.
@@ -559,6 +562,8 @@ Index Topics
     * > Many of the world's fastest growing businesses such as Lyft, Airbnb, and Redfin as well as enterprises such as Samsung, Toyota, and Capital One depend on the scale and performance of DynamoDB to support their mission-critical workloads.
     * Stored on SSD storage, that's why is so fast.
     * Spread across 3 geographically distinct data centres.
+    * > A unit of Read Capacity enables you to perform one strongly consistent read per second (or two eventually consistent reads per second) of items of up to 4KB in size.
+    * > A unit of Write Capacity enables you to perform one write per second for items of up to 1KB in size.
     * **Eventual Consistent Reads (Default)**
     * **Strongly Consistent Reads**
     * Whats mean Eventual Consistent Read?
@@ -568,6 +573,7 @@ Index Topics
   * Redshift
     * for business intelligence
     * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
+    * > Redshift is optimized for batched write operations and for reading high volumes of data. Columnar storage minimizes I/O and maximize data throughput by retrieving only the blocks that contain data for the selected columns. It is not meant for high frequency update use cases typically seen in OLTP systems
     * Redshift can be configured as follows
       * Single Node (160Gb)
       * Multi Node
@@ -843,9 +849,21 @@ Index Topics
         *  ![Network Diagram](images/network-diagram.png)
   *  Cloud Formation
      *  Is a way of completely scripting your cloud environment
+     *  > CloudFormation does not check for account limits. So, it is possible that your stack creation may fail if it exceeds account limits
+     *  > By default, CloudFormation ensures all or nothing deployment. If there is an error at any step and CloudFormation is not able to proceed, then it will remove all AWS resources in a stack that were created by CloudFormation
      *  Quick Start is a bunch of CloudFormation templates already built by AWS Solutions Architects allowing you to create complex enviroments very quickly.
+  *  Code Pipeline
+     *  > Source Action is monitoring source code control system like github or AWS CodeCommit or S3 versioned bucket and trigger automatic pipeline invocation when new version of code is available. Build Action is for creating software binaries from source code. Test action is used for running tests against your code. Deploy Action is used for deploying your code using variety of deployment providers like CloudFormation, CodeDeploy, ECS, Elastic Beanstalk and more. Approval Action is used for manual approvals of a stage in a pipeline. Invoke Action is used for performing custom action
   *  Elastic Beanstalk
-     *  With EB you can quickly deploy and manage applications in the AWS Cloud without worrying about infrastructure that runs those applications. You simply upload your application, and Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring.   
+     *  With EB you can quickly deploy and manage applications in the AWS Cloud without worrying about infrastructure that runs those applications. You simply upload your application, and Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring.
+     * Rolling deployment 
+       * Updates a batch of instances. Each batch is taken out of service and available capacity is reduced by the number of instances in the batch. 
+     * All at once 
+       * deploys new version to all instances simultaneously. Instances are out of service for a short period. 
+     * Rolling with additional batch
+       * Launches additional batch of instances to maintain full capacity during deployment. It deploys version in batches.
+     * Immutable
+       * Deploys new version to a fresh set of instances   
   *  SQS
      *  What is SQS?
         *  Is a web service that gives you access to a message queue that can be used to store messages while waiting for a computer to process them.
@@ -853,18 +871,18 @@ Index Topics
         *  ![SQS SAMPLE](images/sqs-sample.png)
         *  ![SQS SAMPLE2](images/sqs-example-ec2.png)
         *  Using SQS, you can decouple the compenents of an application so they run independendly, easing message management between components. Any component of a distributed application can store messages in a fail-safe queue. Messages can **contain up to 256kb** of text in any format. Any component can later retrieve the messages programatically using the Amazon SQS API.
-        *  The queue acts as a buffer between the component producing and saving data, and the component receiving the fata for processing.
+        *  The queue acts as a buffer between the component producing and saving data, and the component receiving the data for processing.
         *  This means the queue resolves issues that arise if the producer is producing work faster than the consumer can process it, or if the producer or consumer are only intermittently connected to the network.
         *  There are 2 types:
            * Stardand Queues (default)
            * FIFO Queues
-        *  Stardand Queue:
-           * Lets you have a nearly-unlimited number of transactions per second. Standard Queues guarantee that a message is delivered at least once. Hovewer, ocassionally (because the highly-distributed architecture that allows hugh throughput), more than one copy of a message might be delivery out of order. 
-           * Provide best-effort ordering which ensures that messages are generally delivered in the same order as they are sent.
-        * Fifo Queue:
-          * The FIFO queue complements the stardand queue. The most important features of this queue type are FIFO (First-in-first-out) delivery and exactly-once processing: The order in which messages are sent and receives is strictly preserved and a message is delivered once and remains available until a consumer processes and deletes it, duplicates are not introduced into the queue.
+        *  **Stardand Queue**:
+           * Lets you have a **nearly-unlimited number of transactions per second**. Standard Queues guarantee that a **message** is **delivered at least once**. Hovewer, ocassionally (because the highly-distributed architecture that allows high throughput), **more than one copy of a message might be delivery out of order**. 
+           * Provide best-effort ordering which ensures that messages are **generally delivered in the same order as they are sent**.
+        * **FIFO Queue**:
+          * The FIFO queue complements the stardand queue. The most important features of this queue type are FIFO (First-in-first-out) delivery is **exactly-once processing**. **The order in which messages are sent and receives is strictly preserved and a message is delivered once and remains available until a consumer processes and deletes it, duplicates are not introduced into the queue**.
         * SQS is pull based, not pushed based.
-        * Messages can be kept in the queue from 1 minute to 14 days. the default retention is 4 days.
+        * Messages can be **kept in the queue from 1 minute to 14 days**. the default retention is 4 days.
         * Visibility Time Out is the amount of time that the message is invisible in the SQS queue after a reader picks up that message. Provided the job is processed before the visibility time out expires, the message will then be deleted from the queue. If the job is not processed within that time, the message will become visible again and another reader will process it. This could result in the same message being delivered twice.
         * Visibility Time Out maximum is 12 hours.
         * SQS guarantees that you messages will be processed at least one time. 
@@ -885,8 +903,39 @@ Index Topics
          * Control the flow of activity tasks in a workflow execution. If something has finished or failed in a workflow, a Decider decides what to do next.
        * Activity Workers
          * Carry out the activity tasks.
+       * Domain
+         * A collection of related Workflow
+     * SES - Simple Email Service
+       * What happens when you send an email with Amazon SES.
+         * ![SES](images/SES.png)
+       * Hard Bounce
+         * ![Hard Bounce](images/hard-bounce.png)
+       * Soft Bounce
+         * ![Soft Bounce](images/soft-bounce.png)
+       * Complaint
+         * ![Complaint](images/complaint.png)
+       * Auto Response
+         * ![Auto Response](images/auto-response.png)
+       * Sender Policy Framework
+         *  Is designed to combat email spoofing
+         *  Domain owners identify which mail servers are authorized to send emails for the domain
+         *  Specified as a DNS resource record in domain's DNS server (TXT records with IP Address Listed)
+         *  To pass SPF Check
+            *  Use default MAIL FROM domain of SES as SES already has a SPF
+            *  Use your domain and publish SPF in DNS Server
+         * DomainKeys Identified Mail (DKIM)
+           * Sender signs the messages (Cryptografic signing)
+           * Protects against anauthorized tampering of message during transit
+           * ISP's cross checks the signature against Sender's public key detect tampering
+           * Sender's Public Key is published in Sender's DNS records
+           * SES can automatically add signatures when you setup your domain (or) you can add your own DKIM signature.     
+         * DMARC Compliance
+           * Domain based message authentication, Reporting, and Conformance (DMARC) is an email authentication protocol
+           * Uses SPF and DKIM to detect email spoofing 
+           * Email can comply with DMARC through SPF or through DKIM
      * SNS - Simple Notification Service 
        * SNS is a webservice that makes easy to set up, operate, and send notifications from the cloud.
+       * > SNS Topic is useful for broadcasting a message to multiple consumers. Kinesis Streams allows multiple consumers to read data available in the streams. Both these solutions are viable options when you have multiple consumers. Each message in a SQS Queue is meant to be consumed by one consumer
        * It provides developers with highly scalable, flexible, and cost-effective capability to publish messages from an application and immediately deliver them to subcribers  or other applications.
        * Besides pushing cloud notifications directly to mobile devices Amazon SNS can also deliver notifications by SMS or email to Amazon Simple Queue Service (SQS), or to any HTTP endpoint.
        * SNS allows you to group multiple recipients using topics. A topic is an "access point" for allowing recipients to dynamically subscribe for identical copies of the same notification
@@ -910,35 +959,112 @@ Index Topics
        * You pay based on the minutes that you transcode and the resolution at which you transcode.
        * ![sample](images/elastic-transcorder.png)
    * API Gateway
-     * API Gataway is a fully managed service that makes it easy for developers to publish, maintain, monitor, and secure API's at any scale.
-     * With a few clicks in the AWS Management Console, you can create an API that acts as a "front door" for applications to access data, business logic, or functionality from your back-end services, such as appplications running on Amazon Elastic Cloud (EC2), code running on AWS Lambda, or any web application. 
-     * ![API Gateway](images/async-api-gateway.png)
-   * What Can API Gateways do?
-     * Expose HTTPS endpoints to define a Restfull API
-     * Serverless-ly connect to services like Lambda and DynamoDB
-     * Send each API endpoint to a different target
-     * Run efficiently with low cost
-     * Scale effortlessly 
-     * Track and control usage by API Keys
-     * Throttle request to prevent attacks 
-     * Connect to Cloud Watch to log all request for monitoring
-     * Mantain multiple version of your API.
-     * ![COnfigure API G](images/api-gateway-configure.png)
-     * ![Deploy API G](images/deploy-api-gateway.png)
-     * You can enable API Caching in Amazon API Gateway to cache your endpoint's response. With caching, you can reduce the number of calls made to your endpoint and also improve the latency of the request to your API. When you enable caching for a stage, API Gateways caches responses from your endpoint for a specific TTL (Time to live) period, in seconds. API Gateway then responds to the request by looking up the endpoint response from the cache instead of making a request to your endpoint.
-   * **Some Origin Policy**
-     * In computing, the same-origin policy is an important concept in the web application security model. Under the policy, a web browser permits scripts contained in a first web page to access data in a second web page, but only if both web pages have the same origin.
-     * This is done to prevent **Cross-Site Scripting (XSS) attacks**.
-       *  Enforced by Web Browsers
-       *  Ignored by tools like Postman, Curl
-  * **CORS (Cross Origin Resources Sharing)**
-    * CORS is one way the server at the other end (not the client code in the browser) can relax the same-origin policy.
-    * CORS is a mechanism that allows restricted resources (eg fonts) on a web page to be requested from another domain outside the domain from which the first resource was served.
-  * CORS in Action
-    1. Browser makes an HTTP OPTIONS call for a URL (OPTIONS in http methods like GET, PUT and POST)
-    2. Server returns a response that says:
-       1. "These other domains are approved to GET this URL"
-    * **Error - "Origin policy cannot be read at the remote source?" You need to enables CORS on API Gateway**
+      * API Gataway is a fully managed service that makes it easy for developers to publish, maintain, monitor, and secure API's at any scale.
+      * With a few clicks in the AWS Management Console, you can create an API that acts as a "front door" for applications to access data, business logic, or functionality from your back-end services, such as appplications running on Amazon Elastic Cloud (EC2), code running on AWS Lambda, or any web application. 
+      * ![API Gateway](images/async-api-gateway.png)
+     * What Can API Gateways do?
+      * Expose HTTPS endpoints to define a Restfull API
+      * Serverless-ly connect to services like Lambda and DynamoDB
+      * Send each API endpoint to a different target
+      * Run efficiently with low cost
+      * Scale effortlessly 
+      * Track and control usage by API Keys
+      * Throttle request to prevent attacks 
+      * Connect to Cloud Watch to log all request for monitoring
+      * Mantain multiple version of your API.
+      * ![COnfigure API G](images/api-gateway-configure.png)
+      * ![Deploy API G](images/deploy-api-gateway.png)
+      * You can enable API Caching in Amazon API Gateway to cache your endpoint's response. With caching, you can reduce the number of calls made to your endpoint and also improve the latency of the request to your API. When you enable caching for a stage, API Gateways caches responses from your endpoint for a specific TTL (Time to live) period in seconds. API Gateway then responds to the request by looking up the endpoint response from the cache instead of making a request to your endpoint.
+      * **Some Origin Policy**
+       * In computing, the same-origin policy is an important concept in the web application security model. Under the policy, a web browser permits scripts contained in a first web page to access data in a second web page, but only if both web pages have the same origin.
+      * This is done to prevent **Cross-Site Scripting (XSS) attacks**.
+         *  Enforced by Web Browsers
+         *  Ignored by tools like Postman, Curl
+      * **CORS (Cross Origin Resources Sharing)**
+        * CORS is one way the server at the other end (not the client code in the browser) can relax the same-origin policy.
+        * CORS is a mechanism that allows restricted resources (eg fonts) on a web page to be requested from another domain outside the domain from which the first resource was served.
+      * CORS in Action
+        1. Browser makes an HTTP OPTIONS call for a URL (OPTIONS in http methods like GET, PUT and POST)
+        2. Server returns a response that says:
+           1. "These other domains are approved to GET this URL"
+        * **Error - "Origin policy cannot be read at the remote source?" You need to enables CORS on API Gateway**
+  * Kinesis
+    * What is streaming data?
+      * Streaming Data is data that is generated continuosly by thousands of data sources, which typically send in the data records simultaneously, and in small sizes (order of kilobytes)
+        * Purchases from online stores (think amazon.com) (transactions)
+        * Stock Prices
+        * Game data (as the gamer plays)
+        * Social network data
+        * Iot sensor data
+    * Amazon Kinesis is a platform on AWS to send your streaming data to.
+    * Kinesis makes it easy to load and analyse straming data, and also providing the ability for you to build your own custom applications for you business needs.
+    * Kinesis Streams has a maximum retention of 7 days and Kinesis Firehose has a retention of 1 day
+    * 3 Different Types of Kinesis
+      * Kinesis Streams
+      * Kinesis Firehose
+      * Kinesis Analytics
+    * Kinesis Streams
+      * ![Kinesis Streams](images/kinesis-streams.png)
+      * Kinesis Streams consist of **Shards**
+        * 5 transactions per second for reads, up to a maximum total data read rate of 2MB per second and up to 1000 records per second for writes, up to a maximum total data write rate of 1MB per second. (including partition keys)
+        * The data capacity of your stream is a function of number of shards that you specify for the stream. The total capacity of the stream is the sum of the capacities of its shards.
+      * Kinesis Farehose
+        * ![Kinesis Farehose Redshift](images/kinises-farehose-redshift.png)
+        * ![Kinesis Farehose Elasticsearch](images/kinesis-elasticsearch.png)
+      * Kinesis Analytics 
+        * ![Kinesis Analytics](images/kinesis-analytics.png)
+  * Cognito
+    * What is Web Identity Federation?
+      * Web Identity Federetion lets you give your users access to AWS resources after they have successfully authenticated with a web-based identity provider like Amazon, Google or Facebook. Following successful authentication, the user receives a authentication code from the WEB ID provider, which they can trade for temporary AWS security credentials    
+    * Amazon Cognito provides Web Identity Federation with the following features:
+      * Sign-up and Sign-in to your application
+      * Access for guest users
+      * Acts as an Identity Broker between your application and Web Id Providers, so you don't need to write any addional code.
+      * Synchronizes user data for multiples devices.
+      * Recommended for all mobile applications AWS Services
+      * ![Cognito Use Cases](images/codnito-use-cases.png)
+      * No need for the application to embed or store AWS Credencials locally on the device and it gives users a seamless experience across all mobile service.
+    * Cognito User Pools
+      * ![Cognito User Polls](images/cognito-user-pools.png)
+      * User pool is user based. It handles things like user registration, authentication, and account recovery.
+    * Cognito Identity Pools 
+      * Enable provide temporary AWS credentials to access AWS services like S3 or DynamoDB.
+      * Identity pools authorise access to your AWS resources.
+    * Identity Pool vs User Pool
+      * ![Identity Pool vs User Pool](images/identity-pool-vs-user-pool.png)
+      * ![Synchronization Using SNS](images/push-synchronization-sns.png)
+  * Lambda
+    * ![Brief History Cloud](images/brief-history-of-cloud.png)
+    * Lambda is a ultimate extraction layer
+      * Data Centres
+      * Hardware
+      * Assembly Code/Protocols
+      * High Level Languages
+      * Operating Systems
+      * Application Layer/AWS APIs
+      * AWS Lambda
+    * > There is an upper limit on number of concurrent lambda function executions for your account in each region. You can optionally specify concurrent execution limit at a function level to prevent too many concurrent executions. In this case, lambda executions that exceed the limit are throttled. When synchronously invoked, caller is responsible for retries. When asynchronously invoked, Lambda service automatically retry twice. You can configure Dead Lead Queue where failed events can be stored. S3 invokes Lambda asynchronously and unit of concurrency is the number of configured events
+    * AWS Lambda is a compute service where you can upload your code and create a Lambda Function. AWS takes care provisioning and managing the servers that you use to run the code. You don't have to worry about operating systems, patching, scaling, etc.
+    * > Lambda functions, by default, are allowed access to internet resources. To access databases and other resources in your VPC, you need to configure Lambda function to run inside the context of a private subnet in your VPC. When this is done: your lambda function gets a private IP address and can reach resources in your VPC. In this mode, it can access internet services only if private subnet has a route to a NAT device
+    * You can use Lambda in the following ways:
+      * **As an event-driven compute service**, where Lambda runs you code in response to events.
+      * As a compute service to run you code in response to HTTP Requests using Amazon API Gateway or API calls made using AWS SDKs. 
+    * Traditional vs Serverless
+      * ![Traditional vs Serverless](images/traditional-vs-serveless.png)
+    * Lambda Versioning[*](https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+      * > By using versioning, you can manage your in-production function code in AWS Lambda better. When you use versioning in AWS Lambda, you can publish one or more versions of your Lambda function. As a result, you can work with different variations of your Lambda function in your development workflow, such as development, beta, and production.
+      * Each Lambda function version has a unique Amazon Resource Name (ARN). After you publish a version, it can't be changed.
+      * An alias can only point to a function version, not to another alias. Unlike versions, aliases can be modified. You can update aliases to point to different versions of functions
+      * ![Lambda Versioning](images/lambda-versioning.png)
+    * How Lambda is priced?
+      * Number of Requests
+        * First 1 million requests are free. $0.20 per 1 million requests thereafter.
+      * Duration
+        * Duration is calculated from the time your code begins executing until returns or otherwise terminates, rounded up to the nearest 100ms. The price depends on the amount of memory you allocate to your function. You are charged $0.00001667 to every GB-second used.
+    * Lambda scale out not scale up automatically.
+    * Architectures can get extremely complicated, AWS X-ray  allows you to debug what is happining.
+
+
 
 
 
@@ -1209,6 +1335,10 @@ bottleneck.
   * https://www.vertabelo.com/blog/technical-articles/data-warehouse-modeling-the-star-schema
 
 ## Utils Links
+  * Save AWS EC2 Cost by Automatically Stopping Idle Instance Using Lambda and CloudWatch[*](https://medium.com/@Hironsan/save-aws-ec2-cost-by-automatically-stopping-idle-instance-using-lambda-and-cloudwatch-759edd62b27d)
+  * Data Pipeline Sample[*](https://www.youtube.com/watch?v=5eq6fiw1dPA&t=1203s)
+  * Spark Small Data Problem [*](https://community.hortonworks.com/questions/68154/small-files-problem-with-spark-streaming-for-inges.html)
+  * Hbase vs HDFS[*](https://www.kdnuggets.com/2017/05/hdfs-hbase-need-know.html)
   * ECS[*](https://www.youtube.com/watch?v=IEvLkwdFgnU)
   * Monitoring archs[*](https://dms.licdn.com/playback/C4D05AQFH0hfo6cMoBw/2acff3f4c9884808977143956e879937/feedshare-mp4_3300-captions-thumbnails/1507940147251-drlcss?e=1562788800&v=beta&t=h3n6aSYdKjFwQzTiqLxxbwjv24P7-9FqUbHSkvXzWQo)
   * Docker Best Practices[*](https://blog.docker.com/2019/07/intro-guide-to-dockerfile-best-practices/)
@@ -1247,6 +1377,7 @@ bottleneck.
   * Cognito & Okta authentication for Kibana[*](https://medium.com/condenastengineering/cognito-okta-authentication-for-elasticsearch-kibana-1a9d3dd45bcb)
   * Construção de data pipelines em Apache Spark[*](https://www.infoq.com/br/presentations/construcao-de-data-pipelines-em-apache-spark/)
 
+
 ## Readed Books
 * Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
 
@@ -1255,9 +1386,13 @@ bottleneck.
   * IP address CIDR[*](http://cidr.xyz/)
   * Data Studio[*](https://datastudio.google.com/u/0/)
     * >Reports lets you create reports and data visualizations. Data Sources are reusable components that connect a report to your data, such as Google Analytics, Google Sheets, Google AdWords and so forth.
+  * Data Map Visualization https://kepler.gl/
 
 ## Interested Topics
   * Realease Engineering
+
+## Termial Stuffs
+  * Dockly[*](https://github.com/lirantal/dockly)
 
 
 
