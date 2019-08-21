@@ -2,6 +2,13 @@ Index Topics
 
 * AWS
 * NIFI
+* Core Concepts about Data Intense Applications
+* Interest Topics
+  * Realease Engineering
+  * Architecture Decision
+* Interest Tools
+* Utils Links
+  
 
 ## AWS
  > I’ve always been a software engineer. I used to have a general understanding of what Data Science and Analytics were. **What I didn’t know** was how **important it is** for the data **to respect a few requirements in order to be used effectively**, and how engineers can help make the data readily accessible.
@@ -36,6 +43,7 @@ Index Topics
     * Enables you to manage access to AWS services and resources securely. Using IAM, you can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources.
     ![SpiderMan](./images/great_power.png)
     * Everything you do here is in global region, itsn't belong to a one specific region.
+    * > **The principle of least privilege** (POLP), an important concept in computer security, is the practice of limiting access rights for users to the bare minimum permissions they need to perform their work. Under POLP, users are granted permission to read, write or execute only the files or resources they need to do their jobs: In other words, the least amount of privilege necessary.
     * Enables you to manage users and their level of access for aws stuffs.
     * Features[*](https://info.acloud.guru/team-cloud-technology-training?adchannel=Google&paidcampaign=1648420462&paidadgroup=64616557178&paidkeyword=kwd-411849373105&paidad=315261896152&gclid=EAIaIQobChMIpseVr-394QIVCCaGCh1zSQNmEAAYASAAEgIr8PD_BwE):
       * Shared Access to your AWS Account
@@ -350,6 +358,14 @@ Index Topics
     * EC2 Instances Types 
       * Fight DoRctor MaC PiXels ZAU
       ![EC2 Instances Types Mnemonic](./images/instance_types_mnemonic.png)
+    * EC2 Arch Sample
+      * ![ec2 arch sample](./images/ec2-arch-sample.png)
+      * Stop and Start change the host of your instance
+      * Instance Storage will be lost if you stop and start your instance (not persistence)
+      * Instance Storage are atached to the host, that's why if you stop and start it will be lost. Another thing is, if happens some problem with the host, it will be lost too.
+    * EC2 EBS
+      * ![ec2 ebs](./images/ebs-atached-to-instance.png)
+      * It's a network volume store, it means, you access ebs through a network.
     * Tips
       * Termination Protection is **turned off** by default, you must turn it on.
       * On an EBS-Backed instance, the **default action is for the root EBS volume to be deleted** when the instance is terminated. 
@@ -359,6 +375,10 @@ Index Topics
       * Additional volumes can be encrypted.
       * If an Amazon EBS volume is an additional partition (not the root volume), I can detach it without stopping the instance, although it may take some time.
   * Security Group
+      * ![Security Group is responsible for protect ENI](./images/security-group-eni.png)
+      * Security group is responsible for protect the ENI not the Instance
+      * The maximum amount of SG allows to be attached for ENI is 5.
+      * Every security group belogs to a particular VPC
       * If you apply any change in security group this change take effect immediately.
       * All inbound traffic is blocked by default.
       * All Outbound traffic is allowed.
@@ -478,17 +498,22 @@ Index Topics
       * Patching of the RDS Operating Systems and DB is Amazon's responsability.
       * RDS is NOT Serverless.
       * Aurora Serverless IS Serverless.
-      *  has two keys features:
-      * Multi AZ - For Disaster Recovery
-      ![DisasterRecovery](./images/disaster-recovery.png)
-      * Read Replicas - For Performance
-      ![Performance](./images/performance.png)
+      * Has two keys features:
+        * Multi AZ - For Disaster Recovery
+        ![DisasterRecovery](./images/disaster-recovery.png)
+          * > Although the two terms might sound similar at first glance, the **RTO** and the **RPO** are two very different metrics. The RTO, or **recovery time objective**, is the maximum length of time after an outage that your company is willing to wait for the recovery process to finish. On the other hand, the RPO, or **recovery point objective**, is the maximum amount of data loss your company is willing to accept as measured in time.
+          Another way to describe **the RTO and the RPO is the difference between how long you are willing to be offline after disaster strikes, and how many hours (or minutes) of data you are willing to lose.** 
+        * Read Replicas - For Performance
+        ![Performance](./images/performance.png)
       * Strategy for Disaster Recovery
         * You do it using DNS.
         * ![RDS](./images/rds-disaster-recovery-2.png)
         * ![RDS](./images/rds-disaster-recovery-1.png)
       * Strategy for Read Replicas
         * ![READ-REPLICAS](./images/rds-read-replicas.png)
+      * > When a major version of database engine is deprecated in Amazon RDS, we will provide a minimum six (6) month period after the announcement of a deprecation for you to initiate an upgrade to a supported major version. At the end of this period, an automatic upgrade to the next major version will be applied to any instances still running the deprecated version during their scheduled maintenance windows.
+      * > Once a major or minor database engine version is no longer supported in Amazon RDS, any DB instance restored from a DB snapshot created with the unsupported version will automatically and immediately be upgraded to a currently supported version.
+      * > RDS does automatic failover under common failure scenarios: Loss of Primary Availability Zone, Loss of network connectivity to primary, Unhealthy primary instance, Storage failure on primary
       * NoSQL Database: 
         * > simplicity of design, simpler "horizontal" scaling to clusters of machines (which is a problem for relational databases),[2], finer control over availability and limiting the Object-relational impedance mismatch[9]. The data structures used by NoSQL databases (e.g. key-value, wide column, graph, or document) are different from those used by default in relational databases, making some operations faster in NoSQL. The particular suitability of a given NoSQL database depends on the problem it must solve. Sometimes the data structures used by NoSQL databases are also viewed as "more flexible" than relational database tables.
         * > Instead, most NoSQL databases offer a concept of "eventual consistency" in which database changes are propagated to all nodes "eventually" (typically within milliseconds) so queries for data might not return updated data immediately or might result in reading data that is not accurate, a problem known as stale reads
@@ -570,6 +595,8 @@ Index Topics
       * Consistency across all copies of data is usually reached within a second. Repeating a read after a short time should return the updated data (Best Read Performance)
     * Whats mean Strongly Consistent Read?
       * A strongly consistent read return a result that reflects all writes that received a successful response prior to the read.
+    * use Time To Live (TTL) at no additional cost to delete data automatically when it expires.
+    * Using DAX with DynamoDB solves massive read spikes on hot items and reduces read latency. By reducing the read load on DynamoDB, DAX can also help you reduce how much you spend on DynamoDB.
   * Redshift
     * for business intelligence
     * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
@@ -625,6 +652,9 @@ Index Topics
       * memcached
       * redis
       * ![memcached vs redis](./images/memcached-vs-redis.png)
+  * Disaster Recovery
+    * > Disaster recovery is about preparing for and recovering from any event that has a negative impact on your IT systems. A typical approach involves duplicating infrastructure to ensure the availability of spare capacity in the event of a disaster. Amazon Web Services allows you to scale up your infrastructure on an as-needed basis. For a disaster recovery solution, this results in significant cost savings.
+    * On premisse[*](https://media.amazonwebservices.com/architecturecenter/AWS_ac_ra_disasterrecovery_07.pdf?trk=wp_card)
   * DNS
     * What's DNS?
       * DNS is used to convert human friendly domain names (http://www.google.com) into an Intert Protocol (IP) address (http://123.43.23.22)
@@ -864,13 +894,15 @@ Index Topics
        * Launches additional batch of instances to maintain full capacity during deployment. It deploys version in batches.
      * Immutable
        * Deploys new version to a fresh set of instances   
+  * OpsWorks
+    * > AWS OpsWorks is a configuration management service that provides managed instances of Chef and Puppet. Chef and Puppet are automation platforms that allow you to use code to automate the configurations of your servers. OpsWorks lets you use Chef and Puppet to automate how servers are configured, deployed, and managed across your Amazon EC2 instances or on-premises compute environments. OpsWorks has three offerings, AWS Opsworks for Chef Automate, AWS OpsWorks for Puppet Enterprise, and AWS OpsWorks Stacks.
   *  SQS
      *  What is SQS?
         *  Is a web service that gives you access to a message queue that can be used to store messages while waiting for a computer to process them.
         *  Amazon SQS is a distributed queue system that enables web service applications to quickly and reliably queue messages that one component in the application generates to be consumed by another component. A queue is a temporary repository for messages that are awaiting processing. 
         *  ![SQS SAMPLE](images/sqs-sample.png)
         *  ![SQS SAMPLE2](images/sqs-example-ec2.png)
-        *  Using SQS, you can decouple the compenents of an application so they run independendly, easing message management between components. Any component of a distributed application can store messages in a fail-safe queue. Messages can **contain up to 256kb** of text in any format. Any component can later retrieve the messages programatically using the Amazon SQS API.
+        *  Using SQS, you can decouple the components of an application so they run independendly, easing message management between components. Any component of a distributed application can store messages in a fail-safe queue. Messages can **contain up to 256kb** of text in any format. Any component can later retrieve the messages programatically using the Amazon SQS API.
         *  The queue acts as a buffer between the component producing and saving data, and the component receiving the data for processing.
         *  This means the queue resolves issues that arise if the producer is producing work faster than the consumer can process it, or if the producer or consumer are only intermittently connected to the network.
         *  There are 2 types:
@@ -988,7 +1020,7 @@ Index Topics
         2. Server returns a response that says:
            1. "These other domains are approved to GET this URL"
         * **Error - "Origin policy cannot be read at the remote source?" You need to enables CORS on API Gateway**
-  * Kinesis
+  * Kinesis[*](https://www.sumologic.com/blog/kinesis-streams-vs-firehose/)
     * What is streaming data?
       * Streaming Data is data that is generated continuosly by thousands of data sources, which typically send in the data records simultaneously, and in small sizes (order of kilobytes)
         * Purchases from online stores (think amazon.com) (transactions)
@@ -1063,8 +1095,28 @@ Index Topics
         * Duration is calculated from the time your code begins executing until returns or otherwise terminates, rounded up to the nearest 100ms. The price depends on the amount of memory you allocate to your function. You are charged $0.00001667 to every GB-second used.
     * Lambda scale out not scale up automatically.
     * Architectures can get extremely complicated, AWS X-ray  allows you to debug what is happining.
-
-
+  * The Well-Architected Framework
+    * Five Pillars
+      * operational excellence, security, reliability, performance efficiency, and cost optimization. 
+    * There are six areas that you should consider when building a serverless workload:
+      * Compute layer, Data layer, Messaging and streaming layer, User management and identity layer, Systems monitoring and deployment, Edge layer, Deployment approaches
+  * Security
+    * KMS
+      * > AWS Key Management Service (KMS) **gives you centralized control over the encryption keys used to protect your data**. AWS KMS is integrated with AWS services **making it easy to encrypt data you store in these services and control access to the keys that decrypt it**. AWS KMS is integrated with AWS CloudTrail, which provides you the ability to audit who used which keys, on which resources, and when. AWS KMS also enables developers to easily add encryption functionality to their application code either directly through encrypt and decrypt service APIs or through its integration with the AWS Encryption SDK
+    * Client Side Encryption
+      * You encrypt your data and manage your own keys
+    * Server Side Encryption
+      * AWS encrypts data and manages the keys for you
+    * Key Management 
+      * On your own
+      * AWS KMS
+      * With AWS Patner Solutions
+      * Using AWS CloudHSM
+    * Key Questions?
+      * Where are the keys stored?
+      * Where are the keys used?
+      * Who has access to the keys?
+ 
 
 
 
@@ -1319,11 +1371,11 @@ bottleneck.
  * ![Key Components](images/ecs-cluster.png)
  * ![ECR](images/ecs-ecr.png)
  * ![Container Instances](images/conteiner-instances.png)
- * ![Tasks](images/task-definetion.png)
+ * ![Tasks](images/task-definition.png)
  * ![Arch ECS](images/arch-ecs-sample.png)
  * ![ECS EC2 MANAGER](images/ec2-ecs-manager.png)
  * ![Fargate](images/fargate.png)
- * ![ECS Constructs](ec2-constructs.png)
+ * ![ECS Constructs](images/ec2-constructs.png)
 
 ## Google Cloud
 * Overview
@@ -1335,6 +1387,8 @@ bottleneck.
   * https://www.vertabelo.com/blog/technical-articles/data-warehouse-modeling-the-star-schema
 
 ## Utils Links
+  * Powering Next-Gen EC2 Instances: Deep Dive into the Nitro System[*](https://www.youtube.com/watch?v=e8DVmwj3OEs)
+  * Instance Types[*](https://aws.amazon.com/ec2/instance-types/)
   * Save AWS EC2 Cost by Automatically Stopping Idle Instance Using Lambda and CloudWatch[*](https://medium.com/@Hironsan/save-aws-ec2-cost-by-automatically-stopping-idle-instance-using-lambda-and-cloudwatch-759edd62b27d)
   * Data Pipeline Sample[*](https://www.youtube.com/watch?v=5eq6fiw1dPA&t=1203s)
   * Spark Small Data Problem [*](https://community.hortonworks.com/questions/68154/small-files-problem-with-spark-streaming-for-inges.html)
@@ -1376,22 +1430,41 @@ bottleneck.
   * UUID or GUID as Primary Keys? Be Careful![*](https://tomharrisonjr.com/uuid-or-guid-as-primary-keys-be-careful-7b2aa3dcb439)
   * Cognito & Okta authentication for Kibana[*](https://medium.com/condenastengineering/cognito-okta-authentication-for-elasticsearch-kibana-1a9d3dd45bcb)
   * Construção de data pipelines em Apache Spark[*](https://www.infoq.com/br/presentations/construcao-de-data-pipelines-em-apache-spark/)
+  * Selecting an AWS instance type NIFI[*](https://www.batchiq.com/nifi-selecting-an-aws-instance-type.html)
+  * Monitoring Nifi with CloudWatch[*](https://www.batchiq.com/monitoring-nifi-with-cloudwatch-logs.html)
+  * Monitoring Nifi API[*](https://www.tutorialspoint.com/apache_nifi/apache_nifi_monitoring)
+  * Nifi API Rest[*](https://nifi.apache.org/docs/nifi-docs/rest-api/)
+  * DynamoDB use cases[*](https://aws.amazon.com/blogs/database/amazon-dynamodb-ad-tech-use-cases-and-design-patterns/)
+  * EC2 network performance cheat sheet[*](https://dzone.com/articles/ec2-network-performance-cheat-sheet)
+
+## Team Strategies
+  * Curva de Tuckman[*](https://blog.trello.com/br/modelo-de-tuckman)
+  * Rubber Duck Debugging[*](https://rubberduckdebugging.com/)
 
 
 ## Readed Books
 * Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
 
-## Interested Tools
+## Interest Tools
+  * Katakoda[*](katacoda.com)
+  * Komiser[*](https://github.com/mlabouardy/komiser)
+  * JsonPath [*](http://jsonpath.com/)
   * Fluentd https://www.fluentd.org
   * IP address CIDR[*](http://cidr.xyz/)
   * Data Studio[*](https://datastudio.google.com/u/0/)
     * >Reports lets you create reports and data visualizations. Data Sources are reusable components that connect a report to your data, such as Google Analytics, Google Sheets, Google AdWords and so forth.
   * Data Map Visualization https://kepler.gl/
+  * Jolt[*](https://github.com/bazaarvoice/jolt)
+  * Jolt Tool[*](https://jolt-demo.appspot.com/#inception)
+  * JsonSchema
+  * CSVSchema
+  * Grok
 
-## Interested Topics
+## Interest Topics
   * Realease Engineering
+  * Architecture Decision[*](https://andydote.co.uk/2019/06/29/architecture-decision-records/)
 
-## Termial Stuffs
+## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
 
 

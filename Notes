@@ -1,3 +1,4 @@
+- Read about instance types
 - I need to re read the vpc endpoint sections
 - I need to understand more IAM Policies.
 - I need to re read about multipart upload
@@ -9,4 +10,17 @@
 - https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html
 -  aula 49: DynamoDB - Provision Throughput - Read and Write Capacity Units
 - https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistS3AndCustomOrigins.html
-- https://media.amazonwebservices.com/AWS_Disaster_Recovery.pdf
+
+- review KMS
+- Cloud Front (ttl, cache, origin)
+- S3 RRS?
+- auto scaling
+- spread placement group
+- aws premium support?
+- autoscaling gorup - terminated instance
+- AWS WAF
+- dynanodb partition and sort key
+- header dynamodb attr
+- metadata instance ec2
+- With SAML-enabled single sign-on
+- dynamodb consistency 
