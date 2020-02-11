@@ -1,0 +1,15 @@
+hdf - Me parece caro e pesado
+https://docs.hortonworks.com/HDPDocuments/HDF3/HDF-3.4.1.1/planning-your-deployment-ppc/content/hdf_cluster_types_and_recommendations.html
+
+podemos usar o proprio nifi para fazer o cluster junto com o zookeper (zero master clustering https://cwiki.apache.org/confluence/display/NIFI/Zero+Master+Clustering)
+https://docs.hortonworks.com/HDPDocuments/HDF3/HDF-3.3.1/nifi-configuration-best-practices/content/clustering.html
+
+e deixar dockenizado
+https://www.nifi.rocks/apache-nifi-docker-compose-cluster/
+
+o problema é que cada nó é um host diferente, então, para reduzir isto, podemos:
+nifi + load balancing
+http://ijokarumawak.github.io/nifi/2016/11/01/nifi-cluster-lb/
+
+e usando conteiner e kubernets, podemos:
+https://github.com/b23llc/nifi-fn-operator

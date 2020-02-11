@@ -15,12 +15,46 @@ Index Topics
  [*](https://medium.com/bolt-labs/want-to-be-a-data-engineer-heres-what-you-need-to-know-68f7575dc6d8)
 
 * AWS Stuffs
+    * Shared Responsibility Model
+      * Data security is the responsibility of the customer. AWS provides capabilities to manage data security; however, it is up to the customer to take advantage of security capabilities based on their individual needs. **Physical infrastructure, Facilities, Host Computers, Network infrastructure are all responsibilities of AWS**
+  
   * Pricing Principles:
   ![Princing Principles](./images/pricing.png)
+  
   * History:
     * > Inventions requires two things: 1. The ability to try a lot of experiments and 2. Not to having to live with the collateral damages of failed experiments. Andy Jassy
+  
+  * Six Common Strategies for Migration: “The 6 R’s”
+  ![Migration](./images/migration.png)
+    1. **REHOST – Also known as “lift-and-shift.”**
+       1. Most rehosting can be automated with tools such as AWS Server Migration Service (SMS), although some customers prefer to do this manually as they learn how to apply their legacy systems to the new cloud platform.
+    2. **REPLATFORM – Sometimes referred to as “lift-tinker-and-shift.”**
+        1.  This entails making a few cloud optimizations in order to achieve some tangible benefit, without changing the core architecture of the application. For example, you may be looking to reduce the amount of time you spend managing database instances, so you move to a database-as-a-service offering like Amazon Relational Database Service (Amazon RDS). 
+    3. **REPURCHASE – Replacing your current environment, casually referred to as “drop and shop.”**
+        1.  This is a decision to move to a newer version or different solution, and likely means your organization is willing to change the existing licensing model it has been using. For workloads that can easily be upgraded to newer versions, this strategy might allow a feature set upgrade and smoother implementation.
+    4. **REFACTOR / RE-ARCHITECT – Changing the way the application is architected and developed, usually done by employing cloud-native**
+       1. Typically, this is driven by a strong business need to add features, scale, or improve performance that would otherwise be difficult to achieve in the application’s existing environment. features.
+    5. **RETIRE – Decommission or archive unneeded portions of your IT portfolio.**
+       1. Identifying IT assets that are no longer useful and can be turned off will help boost your business case, and direct your team’s attention toward maintaining the resources that are widely used.
+    6. **RETAIN – Do nothing, for now—revisit.**
+       1. Organizations retain portions of their IT portfolio because there are some that they are not ready to migrate and feel more comfortable keeping them on-premises, or they are not ready to migrate an application that was recently upgraded and then make changes to it again.
   * Services overview
   ![Global Infrastruture](./images/overview_services_aws.png)
+  
+  * Web Services offers 4 different levels of support:
+    * Developer, Business, Enterprise
+      * Plus the Basic free level.
+  
+  * Trusted Advisor
+    * AWS Trusted Advisor is an online tool that provides you real time guidance to help you provision your resources following AWS best practices.
+    * Security:
+      * S3 Bucket Permissions
+      * Security Groups - Specific Ports Unrestricted
+      * IAM Use
+      * MFA on Root Account
+      * EBS Public Snapshots
+      * RDS Public Snapshots
+  
   * Core concepts
     * The oldest region is the US East (Virginia) and this is where all the news services come out first
     * Availability zone vs Region vs Edge location
@@ -42,7 +76,7 @@ Index Topics
     
     * Enables you to manage access to AWS services and resources securely. Using IAM, you can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources.
     ![SpiderMan](./images/great_power.png)
-    * Everything you do here is in global region, itsn't belong to a one specific region.
+    * **Everything you do here is in global region, itsn't belong to a one specific region.**
     * > **The principle of least privilege** (POLP), an important concept in computer security, is the practice of limiting access rights for users to the bare minimum permissions they need to perform their work. Under POLP, users are granted permission to read, write or execute only the files or resources they need to do their jobs: In other words, the least amount of privilege necessary.
     * Enables you to manage users and their level of access for aws stuffs.
     * Features[*](https://info.acloud.guru/team-cloud-technology-training?adchannel=Google&paidcampaign=1648420462&paidadgroup=64616557178&paidkeyword=kwd-411849373105&paidad=315261896152&gclid=EAIaIQobChMIpseVr-394QIVCCaGCh1zSQNmEAAYASAAEgIr8PD_BwE):
@@ -116,6 +150,7 @@ Index Topics
     * > You can monitor your **estimated AWS charges** using Amazon CloudWatch.
     **Billing metric data is stored in the US East (N. Virginia)** region and represents worldwide charges. This data includes the estimated charges for every service in AWS that you use, in addition to the estimated overall total of your AWS charges. **The alarm triggers when your account billing exceeds the threshold you specify**. **It triggers only when actual billing exceeds the threshold.** It does **not use projections based on your usage so far in the month.**[*](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html)
   * S3 [*](https://www.amazonaws.cn/en/s3/faqs/)
+    * Multi AZ in general, except when S3 IA One Zone.
     * **Offers a highly-scalable, reliable, and low-latency data storage** infrastructure at very low costs.
  
     * **A simple webservice interface** you can use to **store and retrieve any amount of data**, at any time, from anywhere on the web. 
@@ -175,6 +210,23 @@ Index Topics
       * Intelligent Tiering
         * ![S3 Int](./images/s3_int.png)
       * Glacier
+        * Amazon S3 Glacier has three different retrieval tiers.
+          * Expedited retrieval
+
+            * Expedited retrieval allows you to quickly access your data when you need to have almost immediate access to your information. This retrieval type can be used for archives up to 250MB. Expedited retrieval usually completes within 1 and 5 minutes.
+
+          * Standard retrieval
+
+            * Standard retrieval provides access to any of your archives within several hours. Standard retrieval usually takes between 3 and 5 hours to complete.
+
+          * Bulk retrieval
+
+            * Bulk retrieval is Amazon S3 Glacier's lowest-cost retrieval type. You can retrieve large amounts of data inexpensively. Bulk retrieval usually completes within 5 and 12 hours.
+            
+        * S3 Glacier Vault Lock allows you to easily deploy and enforce compliance controls for individual S3 Glacier vaults with a vault lock policy. You can specify controls such as **“write once read many” (WORM)** in a vault lock policy and lock the policy from future edits. Once locked, the policy can no longer be changed.
+        * **Vault Lock allows you to set immutable policies and provides a strong enforcement for compliance controls. IAM Access policy dictates who has access to vaults; but on its own is not sufficient for compliance related controls**
+        * A vault lock policy is different than a vault access policy. Both policies govern access controls to your vault. However, a vault lock policy can be locked to prevent future changes, providing strong enforcement for your compliance controls. You can use the vault lock policy to deploy regulatory and compliance controls which typically require tight controls on data access. In contrast, you use a vault access policy to implement access controls that are not compliance related, temporary, and subject to frequent modification. **Vault lock and vault access policies can be used together. For example, you can implement time-based data retention rules in the vault lock policy (deny deletes), and grant read access to designated third parties or your business partners (allow reads).**
+
       * Glacier Deep Archive
       ![S3 Storage Class](./images/s3-storage-classes-comparison.png)
       ![S3 Choice Storage Class](./images/choices_storage_class.png)
@@ -239,6 +291,29 @@ Index Topics
       ![S3 Pattern3](./images/s3_pattern3.png)
       * Unknown Access Patterns
       ![S3 Pattern4](./images/s3_pattern4.png)
+
+    * S3 Url's
+    * Amazon S3 supports both virtual-hosted–style and path-style URLs to access a bucket.
+
+    In a virtual-hosted–style URL, the bucket name is part of the domain name in the URL. For example:
+
+    * http://bucket.s3.amazonaws.com
+
+    * http://bucket.s3-aws-region.amazonaws.com.
+
+    In a virtual-hosted–style URL, you can use either of these endpoints. If you make a request to the http://bucket.s3.amazonaws.com endpoint, the DNS has sufficient information to route your request directly to the region where your bucket resides.
+
+    * In a path-style URL, the bucket name is not part of the domain (unless you use a region-specific endpoint). For example:
+
+    * US East (N.Virginia) region endpoint, http://s3.amazonaws.com/bucket
+
+    * Region-specific endpoint, http://s3-aws-region.amazonaws.com/bucket
+
+    In a path-style URL, the endpoint you use must match the region in which the bucket resides. For example, if your bucket is in the South America (São Paulo) region, you must use the http://s3-sa-east-1.amazonaws.com/bucket endpoint. If your bucket is in the US East (N. Virginia) region, you must use the http://s3.amazonaws.com/bucket endpoint.
+
+    - S3 is a universal namespace, that is names must be unique globally like a domain name. You can access the bucket through the URL it gets from amazon in your example it would read as "https://s3-eu-west-1.amazonaws.com/acloudguru1234" because it is just a bucket. If however the question asks you to enable a website hosting on a bucket called "acloudguru1234" in us-west-2 Region, Then the URL would be https://acloudguru1234.S3-website-us-west-2.amazonaws.com. ***if it is a website vs just a bucket. If just a bucket, bucket name last. If website bucket name first and has S3-website in the URL***.
+    * Using SAML (Security Assertion Markup Language 2.0), you can give your federated users single sign-on (SSO) access to the AWS Management Console.
+    * S3 can handle up to 3500 GET and PUT per second
   * Cloud Front 
     * A content delivery network (CDN) is a system of distributed systems servers (networks) that delivery webpages and other web content to a user based on the geographic locations of the user, the origin of the webpage,and a content delivery server.
     * Key terminologies:
@@ -259,10 +334,11 @@ Index Topics
       * Edge Location are not just READ ONLY - you can write to them.
       * Objects are cached for the Time To Live (TTL)
       * You can invalidate cached objects, but you will be charged.
+      * Origin custom servers need to be publicly accessible. You can configure CloudFront to embed specific code to a custom header and cross check the header value in Origin Server. In S3, you can grant access to special CloudFront IAM user known as Origin Access Identity (OAI) that is created for your distribution
     ![Cloud Front](./images/cloud_front.png) 
   * Snowball
     * is a petabyte-scale data transport solution that uses secure appliances to transfer large amounts of data into and out of Amazon. Using Snowball addresses common challenges with large-scale data transfer including high networks costs, long transfer times, and security concerns. Tranfering data with Snowball is simple, fast, secure, and can be as little as one-fifth the cost of high speed internet.
-    ![Cloud Front](./images/snowball_image.png) 
+    ![Snow Ball](./images/snowball_image.png) 
     * Comes in either a 50TB or 80TB
     * Uses a multiple layers of security designed to protect your data including tamper-resistant enclusures.
     * import and export to s3.
@@ -393,6 +469,7 @@ Index Topics
       * Provides persistent block storage volumes for use with Amazon EC2 Instances.  
       ![EBS](./images/ebs.png) 
       * Each EBS volume is automatically replicated within its Availability Zone to protect you from component failure, offering high availability and durability.
+    * **EBS is replicated inside a single AZ. If that AZ goes down, EBS volumes in that AZ will be unavailable**
     * 5 Differents Types of EBS Storage
       * General Purpose (SSD)
       * Provisioned IOPS (I/O per second) (SDD)
@@ -426,12 +503,21 @@ Index Topics
       * Volumes restored from encrypted snapshots are encrypted automatically.
       * You can share snapshots, but only them are unecrypted.
       * These snapshots can be shared with other AWS accounts or made public.
+      * You cannot encrypt a already exist volume
     * How to create a encrypted snapshot?
       * Create a snapshot of the unecrypted root device volume
       * Then do a copy of the snapshot and select the encrypt option
       * Create a AMI from the encrypted Snapshot
       * Use that AMI to launch new encrypted instances.
+  * Resource Group
+    * A resource group is a collection of AWS resources that are all in the same AWS region, and that match criteria provided in a query. 
+    * **Can be taged based or cloud formation based.**
+    * In AWS, a resource is an entity that you can work with. Examples include an Amazon EC2 instance, an AWS CloudFormation stack, or an Amazon S3 bucket. If you work with multiple resources, you might find it useful to manage them as a group rather than move from one AWS service to another for each task. If you manage large numbers of related resources, such as EC2 instances that make up an application layer, you likely need to perform bulk actions on these resources at one time. Examples of bulk actions include: Applying updates or security patches. Upgrading applications. Opening or closing ports to network traffic. Collecting specific log and monitoring data from your fleet of instances.
+    * Common user cases:
+      * An application that has different phases, such as development, staging, and production.
+      * A set of AWS resources that you use together for a common project or that you want to manage or monitor as a group.
   *  Cloud Watch
+     *  Using the default settings metrics are sent every 5 minutes to CloudWatch. Using the detailed settings, metrics are then sent every 1 minute.
      *  is a monitoring service to monitor your AWS resources, as well as the application that you run on AWS.
      *  In essential CW monitor performace.
      *  Host Level Metrics are:
@@ -455,6 +541,7 @@ Index Topics
     * Allows you to set Alarms that notify you when particular thresholds are hit.
     * CloudWatch Events helps you to respond to state changes in your AWS resources.
     * CloudWatch Logs helps you to aggregate, monitor and store logs.
+      * CloudWatch Logs provide all the plumbing infrastructure to gather log files, store in CloudWatch, retrieve the log file content when needed, specify desired retention period. In addition, cloudwatch Logs to monitor logs files and publish key information to CloudWatch metrics.
   * AWS Cli
     * >The AWS Command Line Interface (CLI) is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. - aws
     * You will need to set up access in IAM.
@@ -466,6 +553,7 @@ Index Topics
     * curl *http://169.254.169.254/latest/meta-data/*
     * curl *http://169.254.169.254/latest/user-data/*
   * EFS
+    *** Regional Service, I mean, Multi AZ**
     * > Amazon Elastic File System (Amazon EFS) provides a simple, scalable, elastic file system for Linux-based workloads for use with AWS Cloud services and on-premises resources. It is built to scale on demand to petabytes without disrupting applications, growing and shrinking automatically as you add and remove files, so your applications have the storage they need – when they need it. It is designed to provide massively parallel shared access to thousands of Amazon EC2 instances, enabling your applications to achieve high levels of aggregate throughput and IOPS with consistent low latencies. Amazon EFS is a fully managed service that requires no changes to your existing applications and tools, providing access through a standard file system interface for seamless integration. There is a Standard and an Infrequent Access storage class available with Amazon EFS. Using Lifecycle Management, files not accessed for 30 days will automatically be moved to a cost-optimized Infrequent Access storage class, giving you a simple way to store and access active and infrequently accessed file system data in the same file system while reducing storage costs by up to 85%. Amazon EFS is a regional service storing data within and across multiple Availability Zones (AZs) for high availability and durability. You can access your file systems across AZs, regions, and VPCs and share files between thousands of Amazon EC2 instances and on-premises servers via AWS Direct Connect or AWS VPN. - AWS
     * Supports for Network File System version 4 (NFSv4) protocol
     * You only pay for the storage use (no pre-provisioning required)
@@ -488,6 +576,7 @@ Index Topics
         * is a group of instances that are each placed on distinct underlying hardware
         * are recommended for applications that have a small number of critical instances that should be kept separate from each other.
         * Can span multiple Availability Zones.
+        * Spread placement groups have a specific limitation that you can only have a maximum of 7 running instances per Availability Zone. Deploying instances in a single Availability Zone is unique to Cluster Placement Groups
   * Database
     * Relational Database on AWS:
       * SQLServer, Oracle, PostgreSQL, MySQLServer, Aurora, MariaDB.
@@ -514,6 +603,7 @@ Index Topics
       * > When a major version of database engine is deprecated in Amazon RDS, we will provide a minimum six (6) month period after the announcement of a deprecation for you to initiate an upgrade to a supported major version. At the end of this period, an automatic upgrade to the next major version will be applied to any instances still running the deprecated version during their scheduled maintenance windows.
       * > Once a major or minor database engine version is no longer supported in Amazon RDS, any DB instance restored from a DB snapshot created with the unsupported version will automatically and immediately be upgraded to a currently supported version.
       * > RDS does automatic failover under common failure scenarios: Loss of Primary Availability Zone, Loss of network connectivity to primary, Unhealthy primary instance, Storage failure on primary
+      * > Read-replicas can help you with high read loads, but are not intended to be a solution to system outages. Multi-AZ implementations will increase availability because in the event of a instance outage one of the instances in another AZs will pick up the load with minimal delay. Aurora provided the same capability with potentially higher availability and faster response
       * NoSQL Database: 
         * > simplicity of design, simpler "horizontal" scaling to clusters of machines (which is a problem for relational databases),[2], finer control over availability and limiting the Object-relational impedance mismatch[9]. The data structures used by NoSQL databases (e.g. key-value, wide column, graph, or document) are different from those used by default in relational databases, making some operations faster in NoSQL. The particular suitability of a given NoSQL database depends on the problem it must solve. Sometimes the data structures used by NoSQL databases are also viewed as "more flexible" than relational database tables.
         * > Instead, most NoSQL databases offer a concept of "eventual consistency" in which database changes are propagated to all nodes "eventually" (typically within milliseconds) so queries for data might not return updated data immediately or might result in reading data that is not accurate, a problem known as stale reads
@@ -556,6 +646,8 @@ Index Topics
       * What is Multi AZ?
         * ![Multi AZ](./images/multi-az.png)
         * Multi-AZ **allows you to have an exact copy of your production database in another Availability Zone**. **AWS handles the replication for you**, so when your production database is written to, this write will automatically be synchonized to the stand by database.
+        * **Synchronous replication**
+        * For multi-AZ high availability, RDS uses synchronous replication between primary and standby systems. If standby is slow, transactions will take longer to complete. **RDS Read Replica on the other hand uses asynchronous replication and any slowness in Read Replica instance would simply cause data lag in the read - replica.** Transations in primary is not impacted
         * In the event of planned database maintenace, DB Instance failure, or an Availability Zone failure, Amazon RDS will automatically failover to the standby so that database operations can resume quickly without administrative intervention.
         * Multi-AZ **is for disaster recovery only.**
           * It's not primarily used for improving performance, if you wanna performance improvement, you need Read Replicas.
@@ -583,6 +675,7 @@ Index Topics
         * Read replicas can be promoted to be their own databases, it means, to be master. This breaks the replication.
         * You can a read replica in differents regions. 
   * DynamoDB
+    * **Multi AZ**
     * > Amazon DynamoDB is a key-value and document database that delivers single-digit millisecond performance at any scale. It's a fully managed, multiregion, multimaster database with built-in security, backup and restore, and in-memory caching for internet-scale applications. DynamoDB can handle more than 10 trillion requests per day and can support peaks of more than 20 million requests per second.
     * > Many of the world's fastest growing businesses such as Lyft, Airbnb, and Redfin as well as enterprises such as Samsung, Toyota, and Capital One depend on the scale and performance of DynamoDB to support their mission-critical workloads.
     * Stored on SSD storage, that's why is so fast.
@@ -597,6 +690,7 @@ Index Topics
       * A strongly consistent read return a result that reflects all writes that received a successful response prior to the read.
     * use Time To Live (TTL) at no additional cost to delete data automatically when it expires.
     * Using DAX with DynamoDB solves massive read spikes on hot items and reduces read latency. By reducing the read load on DynamoDB, DAX can also help you reduce how much you spend on DynamoDB.
+    * Capacity Reservation allows you to obtain discounts on DynamoDB provisioned throughput capacity. This requires 1 year or 3 year commitment and applies for a region for which the capacity was purchased.
   * Redshift
     * for business intelligence
     * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
@@ -686,6 +780,7 @@ Index Topics
         * A canonical name can be used to resolve one domain name to another. For example, www.m.google.com and www.mobile.google.com and both point to the same domain IP address.
       * Alias Record
         * They are used to map resource record set in your hosted zone to Elastic Load Balancers, Cloud Front distributions,or S3 buckets that are configured as websites.
+          * For Alias Records, TTL value of the resource that is pointed to by Alias Records are used. Route 53 does not allow you to set or override the Alias Record TTLs
         * Alias records work like a CNAME record in that you can map one DNS name (www.site.com) to another target DNS name (elb123.elb.amazonaws.com)
       * CNAME vs Alias
         * A CNAME can't be used for **naked domain**(basically it's a entire domain withou www) names (zone apex record). You can't have a CNAME for http://google.com, it must be either an A Record or an Alias.
@@ -917,8 +1012,11 @@ Index Topics
         * Messages can be **kept in the queue from 1 minute to 14 days**. the default retention is 4 days.
         * Visibility Time Out is the amount of time that the message is invisible in the SQS queue after a reader picks up that message. Provided the job is processed before the visibility time out expires, the message will then be deleted from the queue. If the job is not processed within that time, the message will become visible again and another reader will process it. This could result in the same message being delivered twice.
         * Visibility Time Out maximum is 12 hours.
+        * WaitTimeSeconds:
+          * When the consumer instance polls for new work, the consumer instance will wait a certain time for one or more messages to be available before closing the connection.
         * SQS guarantees that you messages will be processed at least one time. 
         * Amazon SQS long polling is a way to retrieve messages from your Amazon SQS queues. While the regular short polling returns immediately (even if the message queue being polled is empty), long polling doesn't return a response until a messages arrives in the message queue, or the long poll times out.
+        * With SQS, you must implement your own application-level tracking, especially if your application uses multiple queues. Amazon SQS does not provide tracking of these types.
    * SWF (Simple WorkFlow)
      * SWF is a web service that makes easy to coordinate work across distributed applications components. 
      * SWF enables applications for a range of use cases, including media processing, web application backends, business process workflow, and analytics pipelines, to be designed as a coordination of tasks.
@@ -927,7 +1025,7 @@ Index Topics
      * SQS has a retention period of up to 14 days, with SWF, workflow execution can last up to 1 year.
      * Amazon SWF presents a task-oriented API, whereas Amazon SQS offers a message-oriented API.
      * Amazon SWF ensures that a task is assigned only once and is never duplicated. With Amazon SQS, you need to handle duplicated messages and may also need to ensure that a messages is processed only once.
-     * Amazon SWF keeps track of all the tasks and events in an application. With Amazon SQS you need to implement you own application-level tracking, specially if your application uses multiples queues.
+     * **Amazon SWF keeps track of all the tasks and events in an application. With Amazon SQS you need to implement you own application-level tracking, specially if your application uses multiples queues.**
      * SWF Actors
        * Workflow Staters
          * An application that can initiate (start) a workflow. Could be your e-commerce website following the placement of an order, or a mobile app searching for bus time.
@@ -1081,6 +1179,7 @@ Index Topics
     * You can use Lambda in the following ways:
       * **As an event-driven compute service**, where Lambda runs you code in response to events.
       * As a compute service to run you code in response to HTTP Requests using Amazon API Gateway or API calls made using AWS SDKs. 
+      * With Lambda, you have to choose amount of memory needed to execute your function. **Based on the memory configuration, proportional CPU capacity is allocated.**
     * Traditional vs Serverless
       * ![Traditional vs Serverless](images/traditional-vs-serveless.png)
     * Lambda Versioning[*](https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
@@ -1252,10 +1351,10 @@ bottleneck.
       * Performance
         * **Once you have described the load on your system, you can investigate what happens
         when the load increases. You can look at it in two ways:
-        • When you increase a load parameter and keep the system resources (CPU, mem‐
+        * When you increase a load parameter and keep the system resources (CPU, mem‐
         ory, network bandwidth, etc.) unchanged, how is the performance of your system
         affected?
-        • When you increase a load parameter, how much do you need to increase the
+        * When you increase a load parameter, how much do you need to increase the
         resources if you want to keep performance unchanged?**
         * In a batch processing system such as Hadoop, we usually care about **throughput**—**the
         number of records we can process per second, or the total time it takes to run a job
@@ -1385,6 +1484,8 @@ bottleneck.
 * Star Schema
   * http://gkmc.utah.edu/ebis_class/2003s/Oracle/DMB26/A73318/schemas.htm
   * https://www.vertabelo.com/blog/technical-articles/data-warehouse-modeling-the-star-schema
+* Make a README.md
+  * https://www.makeareadme.com/
 
 ## Utils Links
   * Powering Next-Gen EC2 Instances: Deep Dive into the Nitro System[*](https://www.youtube.com/watch?v=e8DVmwj3OEs)
@@ -1436,6 +1537,9 @@ bottleneck.
   * Nifi API Rest[*](https://nifi.apache.org/docs/nifi-docs/rest-api/)
   * DynamoDB use cases[*](https://aws.amazon.com/blogs/database/amazon-dynamodb-ad-tech-use-cases-and-design-patterns/)
   * EC2 network performance cheat sheet[*](https://dzone.com/articles/ec2-network-performance-cheat-sheet)
+  * SSH Sessions[*](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/)
+  * SSH agent forwarding to Private VPC[*](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
+  * S3 url presigned[*](https://medium.com/@aidan.hallett/securing-aws-s3-uploads-using-presigned-urls-aa821c13ae8d)
 
 ## Team Strategies
   * Curva de Tuckman[*](https://blog.trello.com/br/modelo-de-tuckman)
@@ -1459,18 +1563,18 @@ bottleneck.
   * JsonSchema
   * CSVSchema
   * Grok
+  * https://www.infrastructure.aws/
+  * https://sdkman.io/install
 
 ## Interest Topics
   * Realease Engineering
   * Architecture Decision[*](https://andydote.co.uk/2019/06/29/architecture-decision-records/)
-
+  * Json Flatten[*](https://www.kaggle.com/jboysen/quick-tutorial-flatten-nested-json-in-pandas)
+  * An event-driven, utility-based, stateless, code execution environment in which you write code and consume services.[*](https://medium.com/amaro-tech/a-less-server-data-infrastructure-solution-for-ingestion-and-transformation-pipelines-b22a32f93609)
+  * Dynamodb to ES https://aws.amazon.com/blogs/compute/indexing-amazon-dynamodb-content-with-amazon-elasticsearch-service-using-aws-lambda/
+  * AWS in plain English[*](https://expeditedsecurity.com/)aws-in-plain-english/
+  * Best of Nifi[*](https://pierrevillard.com/best-of-nifi/)
+  * Performance Nifi[*](https://marklogic.github.io/nifi/performance-considerations#__RefHeading__774_1654017897)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
-
-
-
-
-
-    
-    
 
