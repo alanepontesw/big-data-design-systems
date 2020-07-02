@@ -334,6 +334,7 @@ Index Topics
       * Edge Location are not just READ ONLY - you can write to them.
       * Objects are cached for the Time To Live (TTL)
       * You can invalidate cached objects, but you will be charged.
+      * OAIs is not used to configure private viewing within CloudFront. Trusted signer help to configure CloudFront for private distribution.
       * Origin custom servers need to be publicly accessible. You can configure CloudFront to embed specific code to a custom header and cross check the header value in Origin Server. In S3, you can grant access to special CloudFront IAM user known as Origin Access Identity (OAI) that is created for your distribution
     ![Cloud Front](./images/cloud_front.png) 
   * Snowball
@@ -1359,8 +1360,7 @@ bottleneck.
         * In a batch processing system such as Hadoop, we usually care about **throughput**—**the
         number of records we can process per second, or the total time it takes to run a job
         on a dataset of a certain size.**
-        * > **(In an ideal world, the running time of a batch job is the size of the dataset divided by the throughput. In
-        practice, the running time is often longer, due to skew (data not being spread evenly across worker processes)
+        * > **(In an ideal world, the running time of a batch job is the size of the dataset divided by the throughput. In practice, the running time is often longer, due to skew (data not being spread evenly across worker processes)
         and needing to wait for the slowest task to complete.)**
         * In online systems, what’s usually more important is the service’s response time—that is, the time between a client sending a request and
         receiving a response.
@@ -1488,6 +1488,7 @@ bottleneck.
   * https://www.makeareadme.com/
 
 ## Utils Links
+  * The need for timezone awareness[*](http://www.creativedeletion.com/2015/05/10/the-need-timezones.html)
   * Powering Next-Gen EC2 Instances: Deep Dive into the Nitro System[*](https://www.youtube.com/watch?v=e8DVmwj3OEs)
   * Instance Types[*](https://aws.amazon.com/ec2/instance-types/)
   * Save AWS EC2 Cost by Automatically Stopping Idle Instance Using Lambda and CloudWatch[*](https://medium.com/@Hironsan/save-aws-ec2-cost-by-automatically-stopping-idle-instance-using-lambda-and-cloudwatch-759edd62b27d)
@@ -1563,10 +1564,11 @@ bottleneck.
   * JsonSchema
   * CSVSchema
   * Grok
-  * https://www.infrastructure.aws/
-  * https://sdkman.io/install
-
+  * AWS Help[*](https://www.infrastructure.aws/)
+  * SDK Man[*](https://sdkman.io/install)
+  * Appflow[*](https://aws.amazon.com/blogs/big-data/analyzing-google-analytics-data-with-amazon-appflow-and-amazon-athena/)
 ## Interest Topics
+  * Serverless Offline[*](https://github.com/localstack/localstack)
   * Realease Engineering
   * Architecture Decision[*](https://andydote.co.uk/2019/06/29/architecture-decision-records/)
   * Json Flatten[*](https://www.kaggle.com/jboysen/quick-tutorial-flatten-nested-json-in-pandas)
@@ -1578,3 +1580,5 @@ bottleneck.
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
 
+## Python Material
+Transforming Code into Beautiful, Idiomatic Python https://www.youtube.com/watch?v=OSGv2VnC0go&t=361s
