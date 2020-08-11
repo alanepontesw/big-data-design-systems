@@ -1541,6 +1541,7 @@ bottleneck.
   * SSH Sessions[*](https://aws.amazon.com/blogs/security/how-to-record-ssh-sessions-established-through-a-bastion-host/)
   * SSH agent forwarding to Private VPC[*](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
   * S3 url presigned[*](https://medium.com/@aidan.hallett/securing-aws-s3-uploads-using-presigned-urls-aa821c13ae8d)
+  * Capturing Data Changes in Amazon Aurora Using AWS Lambda[*](https://aws.amazon.com/blogs/database/capturing-data-changes-in-amazon-aurora-using-aws-lambda/)
 
 ## Team Strategies
   * Curva de Tuckman[*](https://blog.trello.com/br/modelo-de-tuckman)
@@ -1577,6 +1578,7 @@ bottleneck.
   * AWS in plain English[*](https://expeditedsecurity.com/)aws-in-plain-english/
   * Best of Nifi[*](https://pierrevillard.com/best-of-nifi/)
   * Performance Nifi[*](https://marklogic.github.io/nifi/performance-considerations#__RefHeading__774_1654017897)
+  * Chaos Engineering[*](https://www.greenreedtech.com/deployment-pipeline-chaos-engineering-with-stackstorm-and-chaostoolkit/)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
 
