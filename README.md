@@ -1480,6 +1480,15 @@ bottleneck.
 * Overview
   * ![GCP Overview](images/gcp-overview.png)
 
+## Redshift
+
+### What is a data warehouse?
+OLTP vs OLAP
+
+Data Mart
+- Specific to business function: DM1 (Business), DM2 (Marketing)
+
+
 ## Unrelated Topics
 * Star Schema
   * http://gkmc.utah.edu/ebis_class/2003s/Oracle/DMB26/A73318/schemas.htm
@@ -1542,6 +1551,9 @@ bottleneck.
   * SSH agent forwarding to Private VPC[*](https://aws.amazon.com/blogs/security/securely-connect-to-linux-instances-running-in-a-private-amazon-vpc/)
   * S3 url presigned[*](https://medium.com/@aidan.hallett/securing-aws-s3-uploads-using-presigned-urls-aa821c13ae8d)
   * Capturing Data Changes in Amazon Aurora Using AWS Lambda[*](https://aws.amazon.com/blogs/database/capturing-data-changes-in-amazon-aurora-using-aws-lambda/)
+  * https://blog.logrocket.com/containerized-development-nestjs-docker/
+  * ElasticSearch AWS[*](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-vpc.html)
+  * Configure Logstash with SSL[*](https://www.elastic.co/guide/en/logstash/6.2/ls-security.html)
 
 ## Team Strategies
   * Curva de Tuckman[*](https://blog.trello.com/br/modelo-de-tuckman)
