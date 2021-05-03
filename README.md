@@ -94,8 +94,8 @@ Index Topics
       * Support **PCI DSS Compliance** 
     *  ARN (Amazon Resource Name)[TODO] 
     * Users, Groups, Policies and Roles
-      * > AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources for your users. You use IAM to control who can use your AWS resources (authentication) and what resources they can use and in what ways (authorization).[*](https://serverless-stack.com/chapters/what-is-iam.html)
       * >When you first create an AWS account, you are the **root user**. The email address and password you used to create the account is called your root account credentials. You can use them to sign in to the AWS Management Console. When you do, **you have complete, unrestricted access to all resources in your AWS account**, including access to your billing information and the ability to change your password.[*](https://serverless-stack.com/chapters/what-is-iam.html)
+      * > AWS Identity and Access Management (IAM) is a web service that helps you securely control access to AWS resources for your users. You use IAM to control who can use your AWS resources (authentication) and what resources they can use and in what ways (authorization).[*](https://serverless-stack.com/chapters/what-is-iam.html)
       * Users
         *  By default, any new IAM user you create in an AWS account is created with **NO** access to any AWS services. This is a **non-explicit deny** rule set on all new IAM users.
         * Users as people, organizations or something like that, and IAM user consists of a name, a password to sign into a AWS console. (Remember, Itsn't a good pratice give your root creadencials for someone, that's why you will prefer to create IAM users). 
@@ -1741,12 +1741,17 @@ Hugely scalable (100s of TB or PB)
   * S3 url presigned[*](https://medium.com/@aidan.hallett/securing-aws-s3-uploads-using-presigned-urls-aa821c13ae8d)
   * Capturing Data Changes in Amazon Aurora Using AWS Lambda[*](https://aws.amazon.com/blogs/database/capturing-data-changes-in-amazon-aurora-using-aws-lambda/)
   * Terraform Up and Running[*](https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca)
+  * 5 Lessons Learned From Writing Over 300,000 Lines of Infrastructure Code[*](https://blog.gruntwork.io/5-lessons-learned-from-writing-over-300-000-lines-of-infrastructure-code-36ba7fadeac1)
   * Postgres and Debezium[*](https://medium.com/data-hackers/integra%C3%A7%C3%A3o-de-dados-em-tempo-real-do-postgres-para-o-s3-com-debezium-65b0ac97bdb2)
 
 ## Team Strategies
   * Curva de Tuckman[*](https://blog.trello.com/br/modelo-de-tuckman)
   * Rubber Duck Debugging[*](https://rubberduckdebugging.com/)
 
+
+## Good Practices
+* DataOps Manifesto[*](https://www.dataopsmanifesto.org/)
+* 12Factor[*](https://12factor.net/)
 
 ## Readed Books
 * Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
@@ -1779,8 +1784,26 @@ Hugely scalable (100s of TB or PB)
   * Best of Nifi[*](https://pierrevillard.com/best-of-nifi/)
   * Performance Nifi[*](https://marklogic.github.io/nifi/performance-considerations#__RefHeading__774_1654017897)
   * Chaos Engineering[*](https://www.greenreedtech.com/deployment-pipeline-chaos-engineering-with-stackstorm-and-chaostoolkit/)
+  * DVD[*](https://dvc.org/)
+  * Soda -  command-line interface (CLI) tool that enables you to scan the data in your database to surface invalid, missing, or unexpected data.[*](https://docs.soda.io/soda-sql/getting-started/installation.html)
+  * Data Engineering - Tests[*](https://medium.com/weareservian/why-data-engineering-needs-automated-testing-a37a0844d7db)
+  * Mock AWS Services[*](https://github.com/spulec/moto)
+  * Just Say No to More End-to-End Tests[*](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html)
+  * DBT[*](https://www.getdbt.com/)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
+  * Play with Kubernets[*](https://labs.play-with-k8s.com/)
+
+## Youtube Channels
+Subjects Overview in 100 Seconds[*](https://www.youtube.com/watch?v=42iQKuQodW4&t=164s)
 
 ## Python Material
-Transforming Code into Beautiful, Idiomatic Python https://www.youtube.com/watch?v=OSGv2VnC0go&t=361s
+Transforming Code into Beautiful, Idiomatic Python[*](https://www.youtube.com/watch?v=OSGv2VnC0go&)t=361s
+
+## Python Testing
+Pytest[*](https://realpython.com/pytest-python-testing/)
+Testing Your Code[*](https://docs.python-guide.org/writing/tests/)
+5 scopes of Fixtures[*](https://betterprogramming.pub/understand-5-scopes-of-pytest-fixtures-1b607b5c19ed)
+
+## EMR
+https://towardsdatascience.com/zipping-and-submitting-pyspark-jobs-in-emr-through-lambda-functions-46a58a496d9e
