@@ -1,1 +1,16 @@
 https://www.datacamp.com/community/blog/the-path-to-becoming-a-data-engineer
+
+Right now I see a HUGE focus on quality and reliability. When the quality frameworks and best practices get firmly established, what’s the next area of innovation?
+
+There’s a few areas that are ripe for innovation beyond data quality.
+
+1. Data velocity
+Streaming will continue to see higher adoption as the skills become more ubiquitous throughout industry. Data engineers who learn Flink/Spark Streaming will have a salary increment for it just like those that are amazing at batch Spark now.
+
+2. The birth of data products
+Offline data is mostly used for analytics and strategic use cases right now. Closing the loop where data can go from logging -> offline -> online is a huge area of opportunity that businesses will continue to invest in. This will mean data engineers should learn more about online systems and how to do “production ML”
+
+3. Data privacy and governance
+Data privacy will continue to be a HUGE area of focus for the years to come. Having a focus on this and learning about access controls, retention policies, and the legal repercussions of violations will help data engineers develop more privacy-compliant data warehouses.
+
+https://redshift-immersion.workshop.aws/lab1.html

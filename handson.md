@@ -25,3 +25,25 @@ MSCK REPAIR TABLE aws_service_logs.cf_access_optimized
 11. Troubleshooting AWS Network Connectivity: Security Groups and NACLs
 12. Performing Real-Time Data Analysis with Kinesis
     1. https://github.com/linuxacademy/content-aws-mls-c01/tree/master/PerformRealTimeDataAnalysisWithKinesis
+13. How to create a big table from JSON data and transform it in Parquet
+    ```
+    CREATE EXTERNAL TABLE `json_properties`(
+        `properties` string COMMENT 'from deserializer')
+    ROW FORMAT SERDE 
+        'org.openx.data.jsonserde.JsonSerDe' 
+    WITH SERDEPROPERTIES ( 
+        'ignore.malformed.json'='true') 
+    STORED AS INPUTFORMAT 
+        'org.apache.hadoop.mapred.TextInputFormat' 
+    OUTPUTFORMAT 
+        'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+    LOCATION
+        's3://path-to-the-files/input-raw'
+
+    CREATE TABLE dev.json_properties_parquet
+        WITH (
+            external_location = 's3://path-to-the-files/output-parquet/',
+            format = 'PARQUET')
+    AS SELECT * FROM dev.json_properties;
+    ```
+

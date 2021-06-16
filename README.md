@@ -154,6 +154,10 @@ Index Topics
       * MFA
         * > AWS Multi-Factor Authentication (MFA) **is a simple best practice that adds an extra layer of protection on top of your user name and password**. With MFA enabled, when a user signs in to an AWS website, **they will be prompted for their user name and password (the first factor— what they know)**, as well as for **an authentication response from their AWS MFA device (the second factor— what they have).** Taken together, these multiple factors provide increased security for your AWS account settings and resources. 
         You can enable MFA for your AWS account and for individual IAM users you have created under your account. MFA can be also be used to control access to AWS service APIs.
+    * Policy Simulator[*](https://policysim.aws.amazon.com)
+      * Test IAM permissions before you commit them to production
+      * Validate that the policy works as expected
+      * You can also test policies attached to existing users - great to troubleshooting
   * Billing Alarm
     * > You can monitor your **estimated AWS charges** using Amazon CloudWatch.
     **Billing metric data is stored in the US East (N. Virginia)** region and represents worldwide charges. This data includes the estimated charges for every service in AWS that you use, in addition to the estimated overall total of your AWS charges. **The alarm triggers when your account billing exceeds the threshold you specify**. **It triggers only when actual billing exceeds the threshold.** It does **not use projections based on your usage so far in the month.**[*](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html)
@@ -417,7 +421,7 @@ Index Topics
         * Applications with short term, spike, or unpredictable workloads that cannot be interrupted. 
         * Applications being developed or tested on Amazon EC2 for the first time.
       * Reserved 
-        * Applications with steady state or predictable usage.
+        * Applications with steady-state or predictable usage.
         * Applications that require reserved capacity.
         * Users able to make upfront payments to reduce their total computing costs even futher.
         * Types:
@@ -437,6 +441,10 @@ Index Topics
         * Great for licensing which does not support multi-tenancy or cloud deployments.
         * Can be purchased On-Demand (hourly)
         * Can be purchased as a Reservation up to 70% off the On-Demand price.
+    * Compute Savings Plans
+      * In additional for these price options they've introduced the Savings Plan Model. You can save up to 72% in all AWS Compute usage regardless of instance type or region.
+      * Commit to one or three years to use a specific amount of compute power (measured in $/hour)
+      * Super flexible, not only EC2 also include serverless technologies like Lambda and Fargate 
     * EC2 Instances Types:
       * Tip: the number doesn't matter, It's just about generation.
       ![EC2 Instances Types](./images/ec2_instance_types.png)
@@ -689,8 +697,8 @@ Index Topics
     * > Many of the world's fastest growing businesses such as Lyft, Airbnb, and Redfin as well as enterprises such as Samsung, Toyota, and Capital One depend on the scale and performance of DynamoDB to support their mission-critical workloads.
     * Stored on SSD storage, that's why is so fast.
     * Spread across 3 geographically distinct data centres.
-    * > A unit of Read Capacity enables you to perform one strongly consistent read per second (or two eventually consistent reads per second) of items of up to 4KB in size.
-    * > A unit of Write Capacity enables you to perform one write per second for items of up to 1KB in size.
+    * > A Unit of Read Capacity (RCU) enables you to perform one strongly consistent read per second (or two eventually consistent reads per second) of items of up to 4KB in size.
+    * > A Unit of Write Capacity (WCU) enables you to perform one write per second for items of up to 1KB in size.
     * **Eventual Consistent Reads (Default)**
     * **Strongly Consistent Reads**
     * Whats mean Eventual Consistent Read?
@@ -700,6 +708,28 @@ Index Topics
     * use Time To Live (TTL) at no additional cost to delete data automatically when it expires.
     * Using DAX with DynamoDB solves massive read spikes on hot items and reduces read latency. By reducing the read load on DynamoDB, DAX can also help you reduce how much you spend on DynamoDB.
     * Capacity Reservation allows you to obtain discounts on DynamoDB provisioned throughput capacity. This requires 1 year or 3 year commitment and applies for a region for which the capacity was purchased.
+    * Query vs Scan[*](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-query-scan.html):
+      * A query finds items based on the Primary Key, whereas a Scan returns the entire contents of a table.
+      * In most cases a query is preferable to a scan operation. A scan is generally less efficient & more expensive.
+      * The Scan operation returns one or more items and item attributes by accessing every item in a table or a secondary index.
+      * When using Query, or Scan, DynamoDB returns all of the item attributes by default. To get just some, rather than all of the attributes, use a Projection Expression.
+    * ProvisionedThroughputExceededException
+      * It means that your application is sending more requests to the DynamoDB table than the provisioned read/write capacity can handle. In shorts words **Your application's request rate is too high**
+    * Error Retries
+      * Each AWS SDK implements automatic retry logic. The AWS SDK for Java automatically retries requests, and you can configure the retry settings using the ClientConfiguration class. For example, you might want to turn off the retry logic for a web page that makes a request with minimal latency and no retries. Use the ClientConfiguration class and provide a maxErrorRetry value of 0 to turn off the retries.
+      * The usual technique for dealing with these error responses in a networked environment is to implement retries in the client application. This technique increases the reliability of the application and reduces operational costs for the developer.
+    * Exponential Backoff
+      * The idea behind exponential backoff is to use progressively longer waits between retries for consecutive error responses. You should implement a maximum delay interval, as well as a maximum number of retries. The maximum delay interval and maximum number of retries are not necessarily fixed values, and should be set based on the operation being performed, as well as other local factors, such as network latency.
+      * Jitter
+        * Most exponential backoff algorithms use jitter (randomized delay) to prevent successive collisions. Because you aren't trying to avoid such collisions in these cases, you don't need to use this random number
+    * DynamoDB supports two types of secondary indexes:
+      * **Global secondary index** — An index with a partition key and a sort key that can be different from those on the base table. A global secondary index is considered "global" because queries on the index can span all of the data in the base table, across all partitions. A global secondary index is stored in its own partition space away from the base table and scales separately from the base table.
+      * **Local secondary index** — An index that has the same partition key as the base table, but a different sort key. A local secondary index is "local" in the sense that every partition of a local secondary index is scoped to a base table partition that has the same partition key value.
+      * Only Global secondary Indexes can be created or deleted at anytime. Local Secondary Indexes must be created when you first create the table and they cannot be modified or deleted.
+    * Using DynamoDB for session storage alleviates issues that occur with session handling in a distributed web application by moving sessions off of the local file system and into a shared location. Amazon DynamoDB provides an effective solution for sharing session state across web servers without incurring drawbacks.
+    * Partition Key vs Sort Key[*](https://aws.amazon.com/blogs/database/choosing-the-right-dynamodb-partition-key/):
+      * High-cardinality attributes are recommended for DynamoDB partition keys. These are attributes that have distinct values for each item, like e-mailid, employee_no, customerid, sessionid, orderid, and so on. InvoiceDate provides low-cardinality since many values are repeated for such attribute.
+    * DynamoDB Streams captures a time-ordered sequence of item-level modifications in any DynamoDB table and stores this information in a log for up to 24 hours. Applications can access this log and view the data items as they appeared before and after they were modified, in near-real time
   * Redshift
     * for business intelligence
     * > Amazon Redshift **is a fast**, **scalable data warehouse** that makes it simple and cost-effective to analyze all your data across your data warehouse and data lake. Redshift delivers **ten times faster performance than other data warehouses by using machine learning**, **massively parallel query execution**, **and columnar storage on high-performance disk**. You can setup and deploy a new data warehouse in minutes, and run queries across petabytes of data in your Redshift data warehouse, and exabytes of data in your data lake built on Amazon S3. You **can start small for just $0.25 per hour and scale to $250 per terabyte per year**, less than one-tenth the cost of other solutions.
@@ -1779,7 +1809,7 @@ Hugely scalable (100s of TB or PB)
   * Architecture Decision[*](https://andydote.co.uk/2019/06/29/architecture-decision-records/)
   * Json Flatten[*](https://www.kaggle.com/jboysen/quick-tutorial-flatten-nested-json-in-pandas)
   * An event-driven, utility-based, stateless, code execution environment in which you write code and consume services.[*](https://medium.com/amaro-tech/a-less-server-data-infrastructure-solution-for-ingestion-and-transformation-pipelines-b22a32f93609)
-  * Dynamodb to ES https://aws.amazon.com/blogs/compute/indexing-amazon-dynamodb-content-with-amazon-elasticsearch-service-using-aws-lambda/
+  * Dynamodb to ES[*](https://aws.amazon.com/blogs/compute/indexing-amazon-dynamodb-content-with-amazon-elasticsearch-service-using-aws-lambda/)
   * AWS in plain English[*](https://expeditedsecurity.com/)aws-in-plain-english/
   * Best of Nifi[*](https://pierrevillard.com/best-of-nifi/)
   * Performance Nifi[*](https://marklogic.github.io/nifi/performance-considerations#__RefHeading__774_1654017897)
