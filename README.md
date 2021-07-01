@@ -1820,6 +1820,7 @@ Hugely scalable (100s of TB or PB)
   * Mock AWS Services[*](https://github.com/spulec/moto)
   * Just Say No to More End-to-End Tests[*](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html)
   * DBT[*](https://www.getdbt.com/)
+  * TDD to fix bugs[*](http://blog.triadworks.com.br/tdd-no-mundo-real-eliminando-bugs-para-sempre)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
   * Play with Kubernets[*](https://labs.play-with-k8s.com/)
