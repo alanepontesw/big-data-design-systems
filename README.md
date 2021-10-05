@@ -1821,6 +1821,8 @@ Hugely scalable (100s of TB or PB)
   * Just Say No to More End-to-End Tests[*](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html)
   * DBT[*](https://www.getdbt.com/)
   * TDD to fix bugs[*](http://blog.triadworks.com.br/tdd-no-mundo-real-eliminando-bugs-para-sempre)
+  * Building an Interpreter Series[*](https://leandrotk.github.io/series/building-an-interpreter/)
+  * How to run AWS Glue jobs on your computer using Docker, VSCode and Jupyter Notebook[*](https://medium.com/dataengineerbr/how-to-run-aws-glue-jobs-on-your-own-computer-using-docker-vscode-and-jupyter-notebook-780c9305d804)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
   * Play with Kubernets[*](https://labs.play-with-k8s.com/)
@@ -1838,3 +1840,15 @@ Testing Your Code[*](https://docs.python-guide.org/writing/tests/)
 
 ## EMR
 https://towardsdatascience.com/zipping-and-submitting-pyspark-jobs-in-emr-through-lambda-functions-46a58a496d9e
+
+## Mindset
+Measuring Code Quality: 3 Suggestions On How To Start And Why They Are Important[*](https://sourcelevel.io/blog/measuring-code-quality-3-suggestions-on-how-to-start-and-why-they-are-important?utm_content=buffer9b9a8&utm_medium=social&utm_source=linkedin.com&utm_campaign=buffer)
+
+## Automate 
+Is It Worth the Time?[*](https://www.explainxkcd.com/wiki/index.php/1205:_Is_It_Worth_the_Time%3F)
+
+## Data Mesh
+https://barryoreilly.com/explore/podcast/decentralizing-data-zhamak-dehghani/
+
+## Data Repos
+The Ultimate Repo of Data Discovery Solutions[*](https://www.notion.so/The-Ultimate-Repo-of-Data-Discovery-Solutions-149b0ea2a2ed401d84f2b71681c5a369)

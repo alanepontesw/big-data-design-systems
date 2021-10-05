@@ -46,4 +46,8 @@ MSCK REPAIR TABLE aws_service_logs.cf_access_optimized
             format = 'PARQUET')
     AS SELECT * FROM dev.json_properties;
     ```
+14. Linux User Management Deep Dive
 
+References:
+https://aws.amazon.com/getting-started/hands-on/
+https://workshops.aws/

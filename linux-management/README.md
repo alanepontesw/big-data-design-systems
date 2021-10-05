@@ -175,4 +175,282 @@ Files in home directories by default (you can add more in /etc/skel):
 .bashrc       : read every time a user start a new shell
 
 ## User Management Tools
+![User Management Tools](../images/user-man-tools.png)
 
+```
+[root@bbdf6618f605 /]# grep users /etc/group
+users:x:100:
+
+[root@bbdf6618f605 /]# gpasswd users
+Changing the password for group users
+New Password: 
+Re-enter new password: 
+
+[root@bbdf6618f605 /]# grep users /etc/gshadow
+users:$6$QDCIx/Dns$7psb4a5o679IDnBwHrOaU0pDR9CoVxWG6u9UdhOzQLIzDOWe.AWtYluf1B/lHG0jiNd44.Jgw/xSrjtEh7t6t.::
+
+[root@bbdf6618f605 /]# gpasswd -r users
+[root@bbdf6618f605 /]# grep users /etc/gshadow
+users:::
+
+[root@bbdf6618f605 /]# useradd alane
+[root@bbdf6618f605 /]# useradd totolfa
+[root@bbdf6618f605 /]# gpasswd -M alane,totolfa users
+[root@bbdf6618f605 /]# grep users /etc/group # Added as a secondary group
+users:x:100:alane,totolfa
+
+[root@bbdf6618f605 etc]# ls -al /etc/ | grep passwd
+-rw-r--r--  1 root root    789 Jul  6 10:33 passwd
+-rw-r--r--  1 root root    744 Jul  6 10:33 passwd-
+[root@bbdf6618f605 etc]# ls -al /etc/ | grep shadow 
+----------  1 root root    354 Jul  6 10:33 gshadow
+----------  1 root root    341 Jul  6 10:33 gshadow-
+----------  1 root root    488 Jul  6 10:33 shadow
+----------  1 root root    458 Jul  6 10:33 shadow-
+[root@bbdf6618f605 etc]# pwunconv 
+[root@bbdf6618f605 etc]# ls -al /etc/ | grep passwd
+-rw-r--r--  1 root root    800 Jul  6 10:49 passwd
+-rw-r--r--  1 root root    789 Jul  6 10:33 passwd-
+
+[root@bbdf6618f605 etc]# ls -al /etc/ | grep shadow
+----------  1 root root    354 Jul  6 10:33 gshadow
+----------  1 root root    341 Jul  6 10:33 gshadow-
+----------  1 root root    458 Jul  6 10:33 shadow-
+
+[root@bbdf6618f605 etc]# pwconv 
+[root@bbdf6618f605 etc]# ls -al /etc/ | grep shadow
+----------  1 root root    354 Jul  6 10:33 gshadow
+----------  1 root root    341 Jul  6 10:33 gshadow-
+-r--------  1 root root    514 Jul  6 10:51 shadow
+----------  1 root root    458 Jul  6 10:33 shadow-
+```
+
+## Creating Linux Users and Groups
+```
+[root@bbdf6618f605 etc]# groupadd appusers
+[root@bbdf6618f605 etc]# useradd -u 2001 -c "Admin Account for ABC Application" -g appusers appuser1
+[root@bbdf6618f605 etc]# useradd -u 2002 -c "Admin Account for ABC Application" -g appusers appuser2
+[root@bbdf6618f605 etc]# grep appuser /etc/passwd
+appuser1:x:2001:1002:Admin Account for ABC Application:/home/appuser1:/bin/bash
+appuser2:x:2002:1002:Admin Account for ABC Application:/home/appuser2:/bin/bash
+[root@bbdf6618f605 etc]# grep 1002 /etc/group
+appusers:x:1002:
+```
+
+## Linux User Management: Modifying User Settings and Removing Groups
+
+```
+[root@bbdf6618f605 etc]# groupadd dbadmin
+[root@bbdf6618f605 etc]# useradd -u 2003 -c "" -g dbadmin dbadmin
+[root@bbdf6618f605 etc]# grep dbadmin /etc/passwd
+dbadmin:x:2003:1003::/home/dbadmin:/bin/bash
+
+[root@bbdf6618f605 etc]# usermod -s /sbin/nologin dbadmin
+[root@bbdf6618f605 etc]# grep dbadmin /etc/passwd
+dbadmin:x:2003:1003::/home/dbadmin:/sbin/nologin
+
+
+[root@bbdf6618f605 etc]# grep dba /etc/group
+dbadmin:x:1003:
+
+[root@bbdf6618f605 etc]# groupadd dba
+[root@bbdf6618f605 etc]# grep dba /etc/group
+dbadmin:x:1003:
+dba:x:1004:
+
+root@bbdf6618f605 etc]# usermod -g dba dbadmin
+[root@bbdf6618f605 etc]# grep dbadmin /etc/passwd
+dbadmin:x:2003:1004::/home/dbadmin:/sbin/nologin
+[root@bbdf6618f605 etc]# grep dba /etc/group 
+dbadmin:x:1003:
+dba:x:1004:
+
+[root@bbdf6618f605 etc]# ls /home/
+dbadmin
+
+[root@bbdf6618f605 etc]# mkdir /home/dba/
+[root@bbdf6618f605 etc]# ls -al /home | grep dba
+drwxr-xr-x 2 root     root     4096 Jul  7 10:47 dba
+drwx------ 2 dbadmin  dba      4096 Jul  7 10:44 dbadmin
+
+[root@bbdf6618f605 etc]# chown dbadmin:dba /home/dba
+[root@bbdf6618f605 etc]# ls -al /home | grep dba
+drwxr-xr-x 2 dbadmin  dba      4096 Jul  7 10:47 dba
+drwx------ 2 dbadmin  dba      4096 Jul  7 10:44 dbadmin
+
+[root@bbdf6618f605 etc]# chmod 740 /home/dba
+[root@bbdf6618f605 etc]# ls -al /home | grep dba
+drwxr----- 2 dbadmin  dba      4096 Jul  7 10:47 dba
+drwx------ 2 dbadmin  dba      4096 Jul  7 10:44 dbadmin
+
+[root@bbdf6618f605 dbadmin]# cp .bash* /home/dba
+cp: overwrite '/home/dba/.bash_logout'? yes
+cp: overwrite '/home/dba/.bash_profile'? yes
+cp: overwrite '/home/dba/.bashrc'? yes
+
+[root@bbdf6618f605 dba]# ls -la
+total 20
+drwxr----- 2 dbadmin dba  4096 Jul  7 10:54 .
+drwxr-xr-x 1 root    root 4096 Jul  7 10:47 ..
+-rw-r--r-- 1 root    root   18 Jul  7 10:54 .bash_logout
+-rw-r--r-- 1 root    root  141 Jul  7 10:54 .bash_profile
+-rw-r--r-- 1 root    root  312 Jul  7 10:54 .bashrc
+
+[root@bbdf6618f605 dba]# chown dbadmin:dba .bash*
+[root@bbdf6618f605 dba]# ls -la
+total 20
+drwxr----- 2 dbadmin dba  4096 Jul  7 10:54 .
+drwxr-xr-x 1 root    root 4096 Jul  7 10:47 ..
+-rw-r--r-- 1 dbadmin dba    18 Jul  7 10:54 .bash_logout
+-rw-r--r-- 1 dbadmin dba   141 Jul  7 10:54 .bash_profile
+-rw-r--r-- 1 dbadmin dba   312 Jul  7 10:54 .bashrc
+
+[root@bbdf6618f605 dba]# usermod -d /home/dba dbadmin
+[root@bbdf6618f605 dba]# grep dbadmin /etc/passwd
+dbadmin:x:2003:1004::/home/dba:/sbin/nologin
+
+[root@bbdf6618f605 home]# rm -R dbadmin/
+[root@bbdf6618f605 home]# groupdel dbadmin
+```
+
+## Working with Secondary Groups
+```
+[root@bbdf6618f605 home]# groupadd -g 30000 appadmin
+[root@bbdf6618f605 home]# groupmod -g 40000 dba
+
+[root@bbdf6618f605 home]# useradd -g appadmin -G dba user1
+[root@bbdf6618f605 home]# useradd -g appadmin -G dba user2
+[root@bbdf6618f605 home]# useradd -g appadmin -G dba user3
+
+[root@bbdf6618f605 home]# cd ~
+[root@bbdf6618f605 ~]# mkdir /app
+[root@bbdf6618f605 ~]# chgrp appadmin /app
+[root@bbdf6618f605 ~]# chmod 760 /app/
+[root@bbdf6618f605 ~]# ls -al / | grep app
+drwxrw----   2 root appadmin 4096 Jul  7 11:27 app
+
+[root@bbdf6618f605 ~]# mkdir /db
+[root@bbdf6618f605 ~]# chgrp dba /db 
+[root@bbdf6618f605 ~]# chmod 760 /db/
+[root@bbdf6618f605 ~]# ls -al / | grep db 
+drwxrw----   2 root dba      4096 Jul  7 11:28 db
+
+[root@bbdf6618f605 ~]# echo "This file is reserved for application configuration." > /app/app1.conf
+[root@bbdf6618f605 ~]# ls -al /app/app1.conf                                            
+-rw-r--r-- 1 root root 53 Jul  7 11:29 /app/app1.conf
+
+[root@bbdf6618f605 ~]# chgrp appadmin /app/app1.conf 
+[root@bbdf6618f605 ~]# chmod 760 /app/app1.conf 
+[root@bbdf6618f605 ~]# ls -al /app/app1.conf 
+-rwxrw---- 1 root appadmin 53 Jul  7 11:29 /app/app1.conf
+
+[root@bbdf6618f605 ~]# echo "This file is reserved for db configuration." > /db/db1.conf
+[root@bbdf6618f605 ~]# ls -al /db/db1.conf 
+-rw-r--r-- 1 root root 44 Jul  7 11:31 /db/db1.conf
+[root@bbdf6618f605 ~]# chgrp dba /db/db1.conf 
+[root@bbdf6618f605 ~]# chmod 760 /db/db1.conf 
+[root@bbdf6618f605 ~]# ls -al /db/         
+total 12
+drwxrw---- 2 root dba  4096 Jul  7 11:31 .
+drwxr-xr-x 1 root root 4096 Jul  7 11:28 ..
+-rwxrw---- 1 root dba    44 Jul  7 11:31 db1.conf
+```
+
+## User Password Management
+![User Password Management](../images/linux-pass-man.png)
+
+keywords:
+[root@bbdf6618f605 ~]# cat /etc/shadow
+totolfa:!!:18814:0:99999:7:::
+the !! meaning that any password was setted for this user or if appers in front of the password, the user is locked
+
+```
+[root@bbdf6618f605 ~]# passwd totolfa
+Changing password for user totolfa.
+New password: 
+BAD PASSWORD: The password fails the dictionary check - it is too simplistic/systematic
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa:$6$zCHzdkpfYiJ1zPnX$hhLyj/zPnAuLbKuVjHHagCGp65eDmQ42PoVkXx72chgOcrwnqlpYelInA7nmeuokCRcvtiQpjMRYMFWNhPBEJ0:18816:0:99999:7:::
+[root@bbdf6618f605 ~]# passwd -l totolfa
+Locking password for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa:!!$6$zCHzdkpfYiJ1zPnX$hhLyj/zPnAuLbKuVjHHagCGp65eDmQ42PoVkXx72chgOcrwnqlpYelInA7nmeuokCRcvtiQpjMRYMFWNhPBEJ0:18816:0:99999:7:::
+[root@bbdf6618f605 ~]# passwd -u totolfa
+Unlocking password for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa:$6$zCHzdkpfYiJ1zPnX$hhLyj/zPnAuLbKuVjHHagCGp65eDmQ42PoVkXx72chgOcrwnqlpYelInA7nmeuokCRcvtiQpjMRYMFWNhPBEJ0:18816:0:99999:7:::
+[root@bbdf6618f605 ~]# passwd -d totolfa
+Removing password for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa::18816:0:99999:7:::
+[root@bbdf6618f605 ~]# passwd -e totolfa
+Expiring password for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa::0:0:99999:7:::
+[root@bbdf6618f605 ~]# passwd -i 30 totolfa
+Adjusting aging data for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa::0:0:99999:7:30::
+[root@bbdf6618f605 ~]# passwd -n 1 totolfa
+Adjusting aging data for user totolfa.
+passwd: Success
+[root@bbdf6618f605 ~]# grep totolfa /etc/shadow
+totolfa::0:1:99999:7:30::
+
+[root@bbdf6618f605 ~]# passwd -S totolfa
+totolfa NP 1970-01-01 1 99999 7 30 (Empty password.)
+
+[root@bbdf6618f605 ~]# chage -l totolfa
+Last password change                                    : password must be changed
+Password expires                                        : password must be changed
+Password inactive                                       : password must be changed
+Account expires                                         : never
+Minimum number of days between password change          : 1
+Maximum number of days between password change          : 99999
+Number of days of warning before password expires       : 7
+
+```
+
+### Password Aging
+
+![Password Aging](../images/pass-aging.png)
+
+```
+[root@bbdf6618f605 /]# chage -l user1
+Last password change                                    : Jul 07, 2021
+Password expires                                        : never
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 99999
+Number of days of warning before password expires       : 7
+
+[root@bbdf6618f605 /]# chage -M 30 user1
+
+[root@bbdf6618f605 /]# chage -l user1
+Last password change                                    : Jul 07, 2021
+Password expires                                        : Aug 06, 2021
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 30
+Number of days of warning before password expires       : 7
+
+[root@bbdf6618f605 /]# chage -I 60 user1
+
+[root@bbdf6618f605 /]# chage -l user1
+Last password change                                    : Jul 07, 2021
+Password expires                                        : Aug 06, 2021
+Password inactive                                       : Oct 05, 2021
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 30
+Number of days of warning before password expires       : 7
+```
