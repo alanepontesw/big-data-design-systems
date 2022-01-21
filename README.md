@@ -1786,9 +1786,12 @@ Hugely scalable (100s of TB or PB)
 ## Readed Books
 * Data Lake Architecture: Designing the Data Lake and Avoiding the Garbage Dump[*](https://www.amazon.com.br/Data-Lake-Architecture-Designing-Avoiding/dp/1634621174?tag=goog0ef-20&smid=A1ZZFT5FULY4LN&ascsubtag=go_1494986073_58431735035_285514469186_aud-519888259198:pla-485032980911_c_)
 
+## InfraCost
+- Infracost Tool[*](https://github.com/infracost/infracost)
+- Komiser[*](https://github.com/mlabouardy/komiser)
+
 ## Interest Tools
   * Katakoda[*](katacoda.com)
-  * Komiser[*](https://github.com/mlabouardy/komiser)
   * JsonPath [*](http://jsonpath.com/)
   * Fluentd https://www.fluentd.org
   * IP address CIDR[*](http://cidr.xyz/)
@@ -1831,15 +1834,15 @@ Hugely scalable (100s of TB or PB)
 Subjects Overview in 100 Seconds[*](https://www.youtube.com/watch?v=42iQKuQodW4&t=164s)
 
 ## Python Material
-Transforming Code into Beautiful, Idiomatic Python[*](https://www.youtube.com/watch?v=OSGv2VnC0go&)t=361s
+Transforming Code into Beautiful, Idiomatic Python[*](https://www.youtube.com/watch?v=OSGv2VnC0go&)t=361s)
 
 ## Python Testing
-Pytest[*](https://realpython.com/pytest-python-testing/)
-Testing Your Code[*](https://docs.python-guide.org/writing/tests/)
-5 scopes of Fixtures[*](https://betterprogramming.pub/understand-5-scopes-of-pytest-fixtures-1b607b5c19ed)
+- Pytest[*](https://realpython.com/pytest-python-testing/)
+- Testing Your Code[*](https://docs.python-guide.org/writing/tests/)
+- 5 scopes of Fixtures[*](https://betterprogramming.pub/understand-5-scopes-of-pytest-fixtures-1b607b5c19ed)
 
 ## EMR
-https://towardsdatascience.com/zipping-and-submitting-pyspark-jobs-in-emr-through-lambda-functions-46a58a496d9e
+Lambda starting EMR Jobs[*](https://towardsdatascience.com/zipping-and-submitting-pyspark-jobs-in-emr-through-lambda-functions-46a58a496d9e)
 
 ## Mindset
 Measuring Code Quality: 3 Suggestions On How To Start And Why They Are Important[*](https://sourcelevel.io/blog/measuring-code-quality-3-suggestions-on-how-to-start-and-why-they-are-important?utm_content=buffer9b9a8&utm_medium=social&utm_source=linkedin.com&utm_campaign=buffer)
@@ -1848,7 +1851,11 @@ Measuring Code Quality: 3 Suggestions On How To Start And Why They Are Important
 Is It Worth the Time?[*](https://www.explainxkcd.com/wiki/index.php/1205:_Is_It_Worth_the_Time%3F)
 
 ## Data Mesh
-https://barryoreilly.com/explore/podcast/decentralizing-data-zhamak-dehghani/
+Decentralizing Data[*](https://barryoreilly.com/explore/podcast/decentralizing-data-zhamak-dehghani/)
 
 ## Data Repos
 The Ultimate Repo of Data Discovery Solutions[*](https://www.notion.so/The-Ultimate-Repo-of-Data-Discovery-Solutions-149b0ea2a2ed401d84f2b71681c5a369)
+
+## Datetime
+- Why is programming with dates so hard?[*](https://levelup.gitconnected.com/why-is-programming-with-dates-so-hard-7477b4aeff4c)
+- Lossy vs Lossless?[*](https://www.tutorialspoint.com/difference-between-lossy-compression-and-lossless-compression)
