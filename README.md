@@ -1826,6 +1826,7 @@ Hugely scalable (100s of TB or PB)
   * TDD to fix bugs[*](http://blog.triadworks.com.br/tdd-no-mundo-real-eliminando-bugs-para-sempre)
   * Building an Interpreter Series[*](https://leandrotk.github.io/series/building-an-interpreter/)
   * How to run AWS Glue jobs on your computer using Docker, VSCode and Jupyter Notebook[*](https://medium.com/dataengineerbr/how-to-run-aws-glue-jobs-on-your-own-computer-using-docker-vscode-and-jupyter-notebook-780c9305d804)
+  * Database Locks[*](https://stackoverflow.com/questions/129329/optimistic-vs-pessimistic-locking)
 ## Terminal Stuffs
   * Dockly[*](https://github.com/lirantal/dockly)
   * Play with Kubernets[*](https://labs.play-with-k8s.com/)
@@ -1859,3 +1860,6 @@ The Ultimate Repo of Data Discovery Solutions[*](https://www.notion.so/The-Ultim
 ## Datetime
 - Why is programming with dates so hard?[*](https://levelup.gitconnected.com/why-is-programming-with-dates-so-hard-7477b4aeff4c)
 - Lossy vs Lossless?[*](https://www.tutorialspoint.com/difference-between-lossy-compression-and-lossless-compression)
+
+## Read Corrupt Record Files
+https://docs.azuredatabricks.net/_static/notebooks/read-csv-corrupt-record.html
